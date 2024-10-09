@@ -1,0 +1,619 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ec2f110c-76ea-45a6-8601-ddf52f76b224" name="Changes" comment="new project created">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/b-10.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/b-14.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/b-17.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/b-9.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/bb-16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/bb-9.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/bg-2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/bg-43.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/challenge-medal.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/chip.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/close.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/coming-soon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/download1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/download2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/download3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/download4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/download5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/download6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/download7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/e-1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/e-2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/e-3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/e-4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/e-5.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/e-6.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/fast-graduate.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/favicon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/female-profile.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/g-1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/g-2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/g-3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/h-1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/h-2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/h-3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/h-4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/h-5.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/h-6.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/help-bg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/icon-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/icon-3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/icon-play.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/icon2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/loading.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/login-bg-2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/login-bg.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/map-marker.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/next.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/onfire.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/p-1-1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/p-1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/p-2-1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/p-2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/p-3-1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/p-3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/p-4-1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/p-4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/p-5.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/p-6.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pl-22.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pl-23.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pl6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pl7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pl8.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pl9.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/play.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/poster-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/poster-2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/poster-3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-10.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-11.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-12.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-13.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-14.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-15.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-17.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-18.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-20.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-21.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-22.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-23.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-24.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-8.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pp-9.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/preloader.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/prev.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/profile-2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/profile-3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/profile-4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/pt-1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/s-1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/s-10.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/s-11.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/s-12.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/s-2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/s-3.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/s-4.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/s-5.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/s-6.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/s-7.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/s-8.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/s-9.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/star-disable.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/star.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/story-1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/story-2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/story-3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/story-4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/story-5.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/story-6.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/story-7.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/story-8.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/t-1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/t-10.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/t-11.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/t-12.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/t-2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/t-21.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/t-22.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/t-23.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/t-24.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/t-25.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/t-3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/t-30.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/t-31.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/t-32.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/t-33.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/t-34.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/t-35.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/t-36.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/top-student.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/u-bg.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/user-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/user-11.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/user-12.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/user-2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/user-21.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/user-22.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/user-23.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/user-24.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/user-25.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/user-3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/user-4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/user-5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/user-6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/user-7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/user-8.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/user-9.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/user_1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/user_2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/v-1.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/v-2.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/v-4.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/video-bg-1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/video-bg-2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/robots.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/App.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Context/Authcontext.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Modal/loginModal.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Modal/regmodal.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Services/Auth.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Services/AxiosInstance.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Services/api.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/css/bootstrap-datetimepicker.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/css/emoji.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/css/feather.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/css/lightbox.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/css/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/css/themify-icons.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/css/video-player.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/fonts/Feather.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/fonts/Feather.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/fonts/Feather.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/fonts/themify (1).eot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/fonts/themify.eot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/fonts/themify.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/fonts/themify.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/account-information.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/anaylatics.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/contact-information.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/default-badge.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/default-email-open.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/default-event.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/default-group.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/default-hotel.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/default-live-stream.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/default-member.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/default-msg.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/default-notification.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/default-setting.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/default-storie.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/default-video.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/default.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/detailhotel.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/emailBox.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/forgot.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/help-box.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/login.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/mainLayout.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/navbar.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/password.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/payment.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/register.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/shop-2.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/social.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/user-page.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/user.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/userViewProfile.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/reportWebVitals.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/setupTests.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/vendor/owl-carousel/css/owl.carousel.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/vendor/owl-carousel/css/owl.theme.default.css" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--tags" />
+        <option name="title" value="All" />
+      </GitPushTagMode>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;history&quot;: [
+    {
+      &quot;assignee&quot;: &quot;AmberAnsari2525&quot;,
+      &quot;author&quot;: &quot;AmberAnsari2525&quot;
+    }
+  ],
+  &quot;lastFilter&quot;: {
+    &quot;assignee&quot;: &quot;AmberAnsari2525&quot;,
+    &quot;author&quot;: &quot;AmberAnsari2525&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/AmberAnsari2525/social-project.git",
+    "accountId": "10af2e36-15ff-4c92-bb93-8cbe117d9cfb"
+  }
+}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2lsFBsCtyuKDiQlz1oo10V1Rm0f" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Node.js.default.jsx.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "E:/Social-project/social-project/src/Image",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Social-project\social-project\src\Image" />
+      <recent name="E:\Social-project\social-project\src\Modal" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Social-project\social-project\src\Modal" />
+      <recent name="E:\Social-project\social-project\src" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-WS-242.20224.342" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ec2f110c-76ea-45a6-8601-ddf52f76b224" name="Changes" comment="" />
+      <created>1725960744585</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1725960744585</updated>
+      <workItem from="1725960749681" duration="56000" />
+      <workItem from="1725960830457" duration="9333000" />
+      <workItem from="1725984192104" duration="63000" />
+      <workItem from="1725984318946" duration="2779000" />
+      <workItem from="1726029713547" duration="20423000" />
+      <workItem from="1726115309789" duration="16779000" />
+      <workItem from="1726135069555" duration="8032000" />
+      <workItem from="1726201518370" duration="24749000" />
+      <workItem from="1726287267526" duration="23737000" />
+      <workItem from="1726329721056" duration="3223000" />
+      <workItem from="1726410489255" duration="13978000" />
+      <workItem from="1726461683322" duration="20422000" />
+      <workItem from="1726633427741" duration="90000" />
+      <workItem from="1726633555131" duration="8974000" />
+      <workItem from="1726643985013" duration="13168000" />
+      <workItem from="1726661405705" duration="263000" />
+      <workItem from="1726661750491" duration="334000" />
+      <workItem from="1726677187054" duration="2058000" />
+      <workItem from="1726719527693" duration="7186000" />
+      <workItem from="1726727244830" duration="16661000" />
+      <workItem from="1726806433575" duration="14717000" />
+      <workItem from="1727066343498" duration="170000" />
+      <workItem from="1727066621297" duration="7580000" />
+      <workItem from="1727325172459" duration="22097000" />
+      <workItem from="1727411936928" duration="1897000" />
+      <workItem from="1727413999910" duration="59000" />
+      <workItem from="1727414105394" duration="1263000" />
+      <workItem from="1727415646964" duration="1159000" />
+      <workItem from="1727416874026" duration="15495000" />
+      <workItem from="1727500477800" duration="4452000" />
+      <workItem from="1727505583457" duration="5130000" />
+      <workItem from="1727514407262" duration="9183000" />
+      <workItem from="1727670288308" duration="23379000" />
+      <workItem from="1727757176886" duration="21855000" />
+      <workItem from="1727805498231" duration="46000" />
+      <workItem from="1727846030172" duration="674000" />
+      <workItem from="1727929880422" duration="23615000" />
+      <workItem from="1727974072179" duration="4846000" />
+      <workItem from="1728014152391" duration="25826000" />
+      <workItem from="1728101782716" duration="25085000" />
+      <workItem from="1728209395872" duration="246000" />
+      <workItem from="1728209993753" duration="311000" />
+      <workItem from="1728274600838" duration="21739000" />
+      <workItem from="1728360319288" duration="16473000" />
+      <workItem from="1728447541678" duration="1289000" />
+      <workItem from="1728450065073" duration="345000" />
+    </task>
+    <task id="LOCAL-00001" summary="master">
+      <option name="closed" value="true" />
+      <created>1725961079229</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1725961079229</updated>
+    </task>
+    <task id="LOCAL-00002" summary="upate">
+      <option name="closed" value="true" />
+      <created>1726332986185</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1726332986185</updated>
+    </task>
+    <task id="LOCAL-00003" summary="updated">
+      <option name="closed" value="true" />
+      <created>1726414646363</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1726414646363</updated>
+    </task>
+    <task id="LOCAL-00004" summary="side bar issue reslove.">
+      <option name="closed" value="true" />
+      <created>1726485371084</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1726485371085</updated>
+    </task>
+    <task id="LOCAL-00005" summary="updated code">
+      <option name="closed" value="true" />
+      <created>1726661939803</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1726661939803</updated>
+    </task>
+    <task id="LOCAL-00006" summary="updated the code">
+      <option name="closed" value="true" />
+      <created>1726725728217</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1726725728217</updated>
+    </task>
+    <task id="LOCAL-00007" summary="updated  the&#10; code">
+      <option name="closed" value="true" />
+      <created>1726747578482</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1726747578483</updated>
+    </task>
+    <task id="LOCAL-00008" summary="updated  the&#10; code">
+      <option name="closed" value="true" />
+      <created>1726816547365</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1726816547365</updated>
+    </task>
+    <task id="LOCAL-00009" summary="updated  the&#10; code">
+      <option name="closed" value="true" />
+      <created>1726817158041</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1726817158043</updated>
+    </task>
+    <task id="LOCAL-00010" summary="updated  the&#10; code">
+      <option name="closed" value="true" />
+      <created>1727071942812</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1727071942813</updated>
+    </task>
+    <task id="LOCAL-00011" summary="updated  the&#10; code">
+      <option name="closed" value="true" />
+      <created>1727243581284</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1727243581284</updated>
+    </task>
+    <task id="LOCAL-00012" summary="set my code..">
+      <option name="closed" value="true" />
+      <created>1727243639779</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1727243639779</updated>
+    </task>
+    <task id="LOCAL-00013" summary="pushed">
+      <option name="closed" value="true" />
+      <created>1727265498229</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1727265498229</updated>
+    </task>
+    <task id="LOCAL-00014" summary="codede">
+      <option name="closed" value="true" />
+      <created>1727417546581</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1727417546581</updated>
+    </task>
+    <task id="LOCAL-00015" summary="all error resloved.">
+      <option name="closed" value="true" />
+      <created>1727429240180</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1727429240181</updated>
+    </task>
+    <task id="LOCAL-00016" summary="updated project">
+      <option name="closed" value="true" />
+      <created>1727434510556</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1727434510556</updated>
+    </task>
+    <task id="LOCAL-00017" summary="updated project.">
+      <option name="closed" value="true" />
+      <created>1727434570183</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1727434570183</updated>
+    </task>
+    <task id="LOCAL-00018" summary="all pages completed">
+      <option name="closed" value="true" />
+      <created>1727503889624</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1727503889624</updated>
+    </task>
+    <task id="LOCAL-00019" summary="all pages completed">
+      <option name="closed" value="true" />
+      <created>1727503916498</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1727503916498</updated>
+    </task>
+    <task id="LOCAL-00020" summary="backend start">
+      <option name="closed" value="true" />
+      <created>1727515830360</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1727515830360</updated>
+    </task>
+    <task id="LOCAL-00021" summary="code">
+      <option name="closed" value="true" />
+      <created>1728042582471</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1728042582471</updated>
+    </task>
+    <task id="LOCAL-00022" summary="error face share pos on social media">
+      <option name="closed" value="true" />
+      <created>1728388856209</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1728388856209</updated>
+    </task>
+    <task id="LOCAL-00023" summary="...">
+      <option name="closed" value="true" />
+      <created>1728448584618</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1728448584618</updated>
+    </task>
+    <task id="LOCAL-00024" summary="...">
+      <option name="closed" value="true" />
+      <created>1728449572313</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1728449572313</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="master" />
+    <MESSAGE value="upate" />
+    <MESSAGE value="side bar issue reslove." />
+    <MESSAGE value="added story and pagges and responsive footer added, and also show chat in responsiveness" />
+    <MESSAGE value="updated" />
+    <MESSAGE value="updated code" />
+    <MESSAGE value="updated the code" />
+    <MESSAGE value="updated  code" />
+    <MESSAGE value="complete all pages" />
+    <MESSAGE value="complete all pages." />
+    <MESSAGE value="updated  the&#10; code" />
+    <MESSAGE value="set my code.." />
+    <MESSAGE value="pushed" />
+    <MESSAGE value="codede" />
+    <MESSAGE value="all error resloved." />
+    <MESSAGE value="updated project" />
+    <MESSAGE value="updated project." />
+    <MESSAGE value="all pages completed" />
+    <MESSAGE value="backend start" />
+    <MESSAGE value="code" />
+    <MESSAGE value="error face share pos on social media" />
+    <MESSAGE value="New project" />
+    <MESSAGE value="..." />
+    <MESSAGE value="new project created" />
+    <option name="LAST_COMMIT_MESSAGE" value="new project created" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/pages/default-notification.jsx</url>
+          <line>9</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
