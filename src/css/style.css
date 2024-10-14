@@ -7080,9 +7080,11 @@ textarea.form-control-lg {
     opacity: 0
 }
 
+/*
 .modal-backdrop.show {
     opacity: .5
 }
+*/
 
 .modal-header {
     display: flex;
@@ -11127,8 +11129,10 @@ textarea.form-control-lg {
     .p-lg-5 {
         padding: 3rem !important
     }
-
-    .px-lg-0 {
+.sp-lg-5{
+    padding: 12rem !important
+}
+.px-lg-0 {
         padding-right: 0 !important;
         padding-left: 0 !important
     }
@@ -14898,9 +14902,9 @@ body:not(.theme-full) .main-content .middle-sidebar-bottom.header-padding {
     color: #000
 }
 
-.modal-backdrop.show {
+/*.modal-backdrop.show {
     opacity: .9
-}
+}*/
 
 .modal-backdrop-none .modal-backdrop.show {
     opacity: 0 !important
@@ -17292,4 +17296,400 @@ select.sort {
     .emoji-wrap li i {
         font-size: 16px
     }
+}
+.media-collage {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between items */
+}
+
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Space between gallery images */
+}
+
+.gallery img, .media-collage video {
+    width: calc(33.33% - 10px); /* Adjust based on your design */
+    height: auto; /* Maintain aspect ratio */
+}
+.plus-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+.plus-indicator-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 1.5rem;
+}
+
+.plus-indicator {
+    font-weight: bold;
+}
+.full-screen-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1050;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.prev-button, .next-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 1;
+}
+
+.prev-button {
+    left: 10px;
+}
+
+.next-button {
+    right: 10px;
+}
+
+.plus-indicator-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.plus-indicator {
+    font-weight: bold;
+}
+
+.modal-content {
+    background: none;
+    border: none;
+}
+
+.modal-body {
+    position: relative;
+    padding: 0;
+}
+
+.modal-body img {
+    max-width: 100%;
+    height: auto;
+}
+.full-screen-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1050;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.prev-button, .next-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 1;
+}
+
+.prev-button {
+    left: 10px;
+}
+
+.next-button {
+    right: 10px;
+}
+
+.plus-indicator-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.plus-indicator {
+    font-weight: bold;
+}
+
+.modal-content {
+    background: none;
+    border: none;
+}
+
+.modal-body {
+    position: relative;
+    padding: 0;
+}
+
+.modal-body img {
+    max-width: 100%;
+    height: auto;
+}
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    z-index: 1000; /* Make sure it appears above other content */
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+    border: 2px solid;
+    border-color: #1b68e4;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 20px;
+}
+/* Custom styles for Swiper */
+.swiper-container {
+    width: 100%;
+    height: auto; /* Adjust height as needed */
+}
+
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    /* Example styles; modify as needed */
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.swiper-slide img {
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+}
+
+.swiper-slide .card {
+    width: 100%; /* Ensures the card takes full width of the slide */
+    transition: transform 0.3s ease;
+}
+
+.swiper-slide:hover .card {
+    transform: scale(1.05); /* Scale effect on hover */
+}
+
+.btn-round-lg {
+    transition: background-color 0.3s ease;
+}
+
+.btn-round-lg:hover {
+    background-color: #f0f0f0; /* Change background on hover */
+}
+
+/* Adjust the spacing between the slides */
+.swiper-slide:not(:last-child) {
+    margin-right: 15px; /* Space between slides */
+}
+
+/* Hide scrollbar (optional) */
+.swiper-container::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for webkit browsers */
+}
+/* Custom styles for Swiper */
+.swiper-container {
+    width: 100%;
+    height: auto; /* Adjust height as needed */
+}
+
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.swiper-slide img {
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+}
+
+.swiper-slide .card {
+    width: 100%; /* Ensures the card takes full width of the slide */
+    transition: transform 0.3s ease;
+}
+
+.swiper-slide:hover .card {
+    transform: scale(1.05); /* Scale effect on hover */
+}
+
+.btn-round-lg {
+    transition: background-color 0.3s ease;
+}
+
+.btn-round-lg:hover {
+    background-color: #f0f0f0; /* Change background on hover */
+}
+
+/* Adjust the spacing between the slides */
+.swiper-slide:not(:last-child) {
+    margin-right: 15px; /* Space between slides */
+}
+
+/* Hide scrollbar (optional) */
+.swiper-container::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for webkit browsers */
+}
+/* Custom styles for Swiper */
+.swiper-container {
+    width: 100%;
+    height: auto; /* Adjust height as needed */
+}
+
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.item {
+    width: 100%; /* Ensures the card takes full width of the slide */
+}
+
+/* Additional styling can be added here as needed */
+/* Add this to your CSS file */
+
+
+
+
+.modal-content {
+    position: relative;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 90%;
+    max-height: 90%;
+    overflow: hidden;
+}
+
+.modal-image {
+    width: 100%;
+    height: auto;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.modal-content {
+    position: relative;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 90%;
+    max-height: 90%;
+    overflow: hidden;
+}
+
+.modal-image {
+    width: 100%;
+    height: auto;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.modal-content {
+    position: relative;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 90%;
+    max-height: 90%;
+    overflow: hidden;
+}
+
+.modal-image {
+    width: 100%;
+    height: auto;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
 }

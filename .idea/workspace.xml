@@ -4,239 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ec2f110c-76ea-45a6-8601-ddf52f76b224" name="Changes" comment="new project created">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/b-10.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/b-14.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/b-17.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/b-9.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/bb-16.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/bb-9.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/bg-2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/bg-43.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/challenge-medal.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/chip.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/close.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/coming-soon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/download1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/download2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/download3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/download4.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/download5.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/download6.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/download7.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/e-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/e-2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/e-3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/e-4.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/e-5.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/e-6.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/fast-graduate.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/favicon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/female-profile.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/g-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/g-2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/g-3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/h-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/h-2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/h-3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/h-4.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/h-5.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/h-6.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/help-bg.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/icon-1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/icon-3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/icon-play.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/icon2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/loading.gif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/login-bg-2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/login-bg.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/map-marker.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/next.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/onfire.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/p-1-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/p-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/p-2-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/p-2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/p-3-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/p-3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/p-4-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/p-4.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/p-5.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/p-6.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pl-22.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pl-23.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pl6.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pl7.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pl8.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pl9.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/play.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/poster-1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/poster-2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/poster-3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-10.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-11.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-12.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-13.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-14.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-15.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-16.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-17.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-18.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-20.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-21.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-22.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-23.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-24.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-4.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-5.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-6.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-7.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-8.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pp-9.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/preloader.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/prev.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/profile-2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/profile-3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/profile-4.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/pt-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/s-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/s-10.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/s-11.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/s-12.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/s-2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/s-3.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/s-4.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/s-5.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/s-6.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/s-7.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/s-8.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/s-9.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/star-disable.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/star.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/story-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/story-2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/story-3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/story-4.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/story-5.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/story-6.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/story-7.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/story-8.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/t-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/t-10.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/t-11.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/t-12.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/t-2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/t-21.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/t-22.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/t-23.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/t-24.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/t-25.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/t-3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/t-30.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/t-31.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/t-32.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/t-33.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/t-34.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/t-35.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/t-36.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/top-student.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/u-bg.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/user-1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/user-11.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/user-12.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/user-2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/user-21.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/user-22.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/user-23.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/user-24.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/user-25.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/user-3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/user-4.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/user-5.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/user-6.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/user-7.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/user-8.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/user-9.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/user_1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/user_2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/v-1.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/v-2.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/v-4.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/video-bg-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/video-bg-2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/manifest.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/robots.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/App.test.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Context/Authcontext.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Modal/loginModal.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Modal/regmodal.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Services/Auth.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Services/AxiosInstance.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Services/api.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/css/bootstrap-datetimepicker.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/css/emoji.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/css/feather.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/css/lightbox.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/css/style.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/css/themify-icons.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/css/video-player.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/fonts/Feather.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/fonts/Feather.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/fonts/Feather.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/fonts/themify (1).eot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/fonts/themify.eot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/fonts/themify.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/fonts/themify.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/account-information.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/anaylatics.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/contact-information.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/default-badge.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/default-email-open.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/default-event.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/default-group.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/default-hotel.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/default-live-stream.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/default-member.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/default-msg.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/default-notification.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/default-setting.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/default-storie.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/default-video.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/default.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/detailhotel.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/emailBox.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/f" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/forgot.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/help-box.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/login.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/mainLayout.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/navbar.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/password.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/payment.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/register.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/shop-2.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/social.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/user-page.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/user.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/userViewProfile.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reportWebVitals.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/setupTests.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/vendor/owl-carousel/css/owl.carousel.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/vendor/owl-carousel/css/owl.theme.default.css" afterDir="false" />
+    <list default="true" id="ec2f110c-76ea-45a6-8601-ddf52f76b224" name="Changes" comment="code added in">
+      <change afterPath="$PROJECT_DIR$/src/pages/f.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Services/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/account-information.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/account-information.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/default-member.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/default-member.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/default-setting.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/default-setting.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/default.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/default.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/f" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/navbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/navbar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/user-page.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user-page.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/user.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/userViewProfile.jsx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -265,12 +49,12 @@
     &quot;author&quot;: &quot;AmberAnsari2525&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/AmberAnsari2525/social-project.git",
-    "accountId": "10af2e36-15ff-4c92-bb93-8cbe117d9cfb"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/AmberAnsari2525/social-project.git&quot;,
+    &quot;accountId&quot;: &quot;10af2e36-15ff-4c92-bb93-8cbe117d9cfb&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -280,23 +64,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Node.js.default.jsx.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "E:/Social-project/social-project/src/Image",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Node.js.default.jsx.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/Social-project/social-project&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\Social-project\social-project\src\Image" />
@@ -367,7 +151,22 @@
       <workItem from="1728274600838" duration="21739000" />
       <workItem from="1728360319288" duration="16473000" />
       <workItem from="1728447541678" duration="1289000" />
-      <workItem from="1728450065073" duration="345000" />
+      <workItem from="1728450065073" duration="19867000" />
+      <workItem from="1728487074640" duration="782000" />
+      <workItem from="1728492976210" duration="8028000" />
+      <workItem from="1728533937108" duration="7791000" />
+      <workItem from="1728542026828" duration="956000" />
+      <workItem from="1728543702849" duration="15610000" />
+      <workItem from="1728620483743" duration="23784000" />
+      <workItem from="1728707540978" duration="24379000" />
+      <workItem from="1728741298645" duration="1889000" />
+      <workItem from="1728743365588" duration="355000" />
+      <workItem from="1728744377281" duration="15431000" />
+      <workItem from="1728812617872" duration="12876000" />
+      <workItem from="1728840585326" duration="11106000" />
+      <workItem from="1728879529662" duration="9641000" />
+      <workItem from="1728889882293" duration="35000" />
+      <workItem from="1728889959061" duration="5832000" />
     </task>
     <task id="LOCAL-00001" summary="master">
       <option name="closed" value="true" />
@@ -561,7 +360,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728449572313</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="new project created">
+      <option name="closed" value="true" />
+      <created>1728450606503</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1728450606503</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -603,7 +410,8 @@
     <MESSAGE value="New project" />
     <MESSAGE value="..." />
     <MESSAGE value="new project created" />
-    <option name="LAST_COMMIT_MESSAGE" value="new project created" />
+    <MESSAGE value="code added in" />
+    <option name="LAST_COMMIT_MESSAGE" value="code added in" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

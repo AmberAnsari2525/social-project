@@ -22,7 +22,6 @@ import {DefaultMsg} from "./pages/default-msg";
 import {EmailBox} from "./pages/emailBox";
 import {DefaultEmailOpen} from "./pages/default-email-open";
 import {DefaultVideo} from "./pages/default-video";
-import {DefaultSettings} from "./pages/default-setting";
 import UserCard from './pages/default-badge';
 import Stories from "./pages/default-storie";
 import Card from "./pages/default-group";
@@ -41,7 +40,8 @@ import {AnayLatics} from "./pages/anaylatics";
 import {DetailHotel} from './pages/detailhotel'
 import FriendsList from "./pages/default-member";
 import Users from "./pages/user"
-import UserViewProfile from "./pages/userViewProfile"
+import UserViewProfile from './pages/view-profile'
+import {UpdatePost} from "./pages/UpdatePost";
 
 function App() {
     return (
@@ -71,6 +71,7 @@ function App() {
                                 {({ preventAuthAccess }) => preventAuthAccess(Forget)}
                             </AuthContext.Consumer>
                         } />
+
 
                         {/* Routes with Navbar inside MainLayout  start*/}
                         <Route element={<MainLayout />}>
@@ -196,9 +197,21 @@ function App() {
                                     {({requireAuth }) => requireAuth(Users)}
                                 </AuthContext.Consumer>
                             } />
-                            <Route path="/user-view-profile" element={
+                            <Route path="/:id/user-view-profile" element={
                                 <AuthContext.Consumer>
-                                    {({requireAuth }) => requireAuth(UserViewProfile)}
+                                    {({requireAuth }) => requireAuth (UserViewProfile)}
+                                </AuthContext.Consumer>
+                            } />
+                            <Route path="/update-post/:id" element={
+                                <AuthContext.Consumer>
+                                    {({ requireAuth }) => requireAuth(UpdatePost)}
+                                </AuthContext.Consumer>
+                            } />
+
+
+                            <Route path="/user-page" element={
+                                <AuthContext.Consumer>
+                                    {({requireAuth }) => requireAuth (UserProfile)}
                                 </AuthContext.Consumer>
                             } />
                         </Route>

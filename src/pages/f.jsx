@@ -29,15 +29,8 @@ export const DefaultPage = ({post}) => {
     const visibleSlides = 4; // Number of slides to show at once
     const [files, setFiles] = useState([]); // State to store uploaded files
     const [showModal, setShowModal] = useState(false); // State to control modal visibility
-    const [showFullContent, setShowFullContent] = useState(false); // State for managing full content visibility
-    const [expandedPosts, setExpandedPosts] = useState({}); // State to track expanded posts
+    const [showFullContent, setShowFullContent] = useState(false); // State to manage full content visibility
 
-    const toggleExpandPost = (postId) => {
-        setExpandedPosts((prev) => ({
-            ...prev,
-            [postId]: !prev[postId], // Toggle the visibility of the specific post
-        }));
-    };
     const handleFileUpload = (event) => {
         const uploadedFiles = Array.from(event.target.files);
         setFiles(uploadedFiles); // Update state with selected files
@@ -98,7 +91,8 @@ export const DefaultPage = ({post}) => {
     //get post state
     const [getPost, setGetPost] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    //friends state
+    const [friends, setFriends] = useState([]);
 
     // Handle reaction click
     /* const handleReactionClick = (postId) => {
@@ -196,24 +190,26 @@ export const DefaultPage = ({post}) => {
                 const data = await gettingPost();
                 console.log('Post fetch successfully:', data);
 
+                // Process the posts to check for media link and gallery images
                 const processedPosts = data.map(post => {
-                    // Initialize likes count from fetched data
-                    setLikesCount((prevCounts) => ({
-                        ...prevCounts,
-                        [post.id]: post.like_count || 0,
-                    }));
-
                     if (post.gallery_images && post.gallery_images.length > 0) {
                         return {
                             ...post,
-                            media_link: post.media_link || post.gallery_images[0],
-                            gallery_images: post.gallery_images.slice(1),
+                            media_link: post.media_link || post.gallery_images[0], // Store the first image in media_link
+                            gallery_images: post.gallery_images.slice(1) // Store the remaining images in gallery_images
                         };
                     }
                     return post;
                 });
 
                 setGetPost(processedPosts);
+
+                // Log the fetched posts
+                processedPosts.forEach(post => {
+                    if (post.username && post.user_image) {
+                        console.log(`Username fetched: ${post.username}, User Image: ${post.user_image}`);
+                    }
+                });
             } catch (err) {
                 if (err.response && err.response.status === 401) {
                     console.log("Unauthorized access. Please log in.");
@@ -470,33 +466,7 @@ export const DefaultPage = ({post}) => {
             await fetchComments(postId); // Fetch updated comments after adding
         }
     };
-    //get friend
-    const [friends, setFriends] = useState([]);
-
-    useEffect(() => {
-        const fetchFriends = async () => {
-            try {
-                const response = await getFriend();// Assuming this returns the response object
-                if (response.status) {
-                    setFriends(response.friends);
-                    console.log(response)// Correctly setting the friends array
-                } else {
-                    setError("Failed to fetch friends.");
-                }
-            } catch (error) {
-                console.error("Error fetching friends:", error);
-
-                if (error.response && error.response.status === 401) {
-                    setError("Unauthorized access. Please log in.");
-                } else {
-                    setError(error.message);
-                }
-            }
-        };
-        fetchFriends();
-    }, []);
-
-// Handle confirm (accept request)
+    // Handle confirm (accept request)
     const handleConfirm = async (id) => {
         console.log('Accepting friend request with ID:', id); // Log before acceptance
         if (id) {
@@ -722,7 +692,7 @@ export const DefaultPage = ({post}) => {
                                                 }}
                                                 disabled={
                                                     (createPost.content.trim().length === 0 && createPost.media_link.length === 0) || !createPost.visibility
-                                                }>
+                                                }                                             >
                                                 <i
                                                     className={`btn-round-sm font-xs feather-edit-3 me-2 bg-greylight`}
                                                     style={{
@@ -967,20 +937,19 @@ export const DefaultPage = ({post}) => {
                                                     )}
                                                 </div>
 
-
                                                 <div className="card-body p-0 me-lg-5">
                                                     <p className="fw-500 text-grey-500 lh-26 font-xssss w-100 mb-2">
-                                                        {expandedPosts[post.id] || post.content.split(' ').length <= 20 ? (
-                                                            post.content // Show full content if expanded or content is 20 words or less
+                                                        {showFullContent || post.content.split(' ').length <= 30 ? (
+                                                            post.content // Show full content if state is true or content is 50 words or less
                                                         ) : (
                                                             <>
-                                                                {post.content.split(' ').slice(0, 20).join(' ')}...
+                                                                {post.content.split(' ').slice(0, 30).join(' ')}... {/* Display the first 30 words */}
                                                                 <Link
                                                                     to="#"
                                                                     className="fw-600 text-primary ms-2"
                                                                     onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        toggleExpandPost(post.id); // Set state to show full content
+                                                                        e.preventDefault(); // Prevent default anchor link behavior
+                                                                        setShowFullContent(true); // Set state to show full content
                                                                     }}
                                                                 >
                                                                     See more
@@ -1191,6 +1160,8 @@ export const DefaultPage = ({post}) => {
                                                     </Link>
 
 
+
+
                                                     {/* Comment button */}
                                                     <Link
                                                         to="#"
@@ -1364,7 +1335,7 @@ export const DefaultPage = ({post}) => {
                                                             className="card-body d-flex pt-3 ps-4 pe-4 pb-0 border-top-xs bor-0">
                                                             <figure className="avatar me-3">
                                                                 <img
-                                                                    src={friend.sender?.image || '/images/profile-2.png'}
+                                                                    src={friend.sender?.image || 'images/profile-2.png'}
                                                                     alt="image"
                                                                     className="shadow-sm rounded-circle w45"/>
                                                             </figure>
@@ -1377,13 +1348,13 @@ export const DefaultPage = ({post}) => {
                                                         <div
                                                             className="card-body d-flex align-items-center pt-0 ps-4 pe-4 pb-4">
                                                             <a
-                                                                href=""
+                                                                href="#"
                                                                 onClick={() => handleConfirm(friend.id)}
                                                                 className="p-2 lh-20 w100 bg-primary me-2 text-white text-center font-xssss fw-600 ls-1 rounded-xl">
                                                                 Confirm
                                                             </a>
                                                             <a
-                                                                href=""
+                                                                href="#"
                                                                 onClick={() => handleDeleteFriend(friend.id)}
                                                                 className="p-2 lh-20 w100 bg-grey text-grey-800 text-center font-xssss fw-600 ls-1 rounded-xl">
                                                                 Delete
@@ -1413,8 +1384,9 @@ export const DefaultPage = ({post}) => {
                                                     <div key={index}
                                                          className="card-body bg-transparent-card d-flex p-3 bg-greylight m-3 rounded-3">
                                                         <figure className="avatar me-2 mb-0">
-                                                            <img src={friend.sender?.image || '/images/profile-2.png'}
-                                                                 className="shadow-sm rounded-circle w45"/>
+                                                            <img
+                                                                src={friend.sender?.image || '/images/female-profile.png'}
+                                                                className="shadow-sm rounded-circle w45"/>
                                                         </figure>
                                                         <h4 className="fw-700 text-grey-900 font-xssss mt-2">
                                                             {friend.sender?.username || "No username available"}
@@ -1431,156 +1403,6 @@ export const DefaultPage = ({post}) => {
                                         )}
                                     </div>
 
-
-                                    <div className="card-body dd-block pt-0 ps-4 pe-4 pb-4">
-                                        <ul className="memberlist mt-1 mb-2 ms-0 d-block">
-                                            <li className="w20">
-                                                <Link to="#">
-                                                    <img
-                                                        src="/images/user-6.png"
-                                                        alt="user"
-                                                        className="w35 d-inline-block"
-                                                        style={{opacity: 1}}
-                                                    />
-                                                </Link>
-                                            </li>
-                                            <li className="w20">
-                                                <Link to="#">
-                                                    <img
-                                                        src="/images/user-7.png"
-                                                        alt="user"
-                                                        className="w35 d-inline-block"
-                                                        style={{opacity: 1}}
-                                                    />
-                                                </Link>
-                                            </li>
-                                            <li className="w20">
-                                                <Link to="#">
-                                                    <img
-                                                        src="/images/user-8.png"
-                                                        alt="user"
-                                                        className="w35 d-inline-block"
-                                                        style={{opacity: 1}}
-                                                    />
-                                                </Link>
-                                            </li>
-                                            <li className="w20">
-                                                <Link to="#">
-                                                    <img
-                                                        src="/images/user-3.png"
-                                                        alt="user"
-                                                        className="w35 d-inline-block"
-                                                        style={{opacity: 1}}
-                                                    />
-                                                </Link>
-                                            </li>
-                                            <li className="last-member">
-                                                <Link
-                                                    to="#"
-                                                    className="bg-greylight fw-600 text-grey-500 font-xssss w35 ls-3 text-center"
-                                                    style={{height: '35px', lineHeight: '35px'}}
-                                                >
-                                                    +2
-                                                </Link>
-                                            </li>
-                                            <li className="ps-3 w-auto ms-1">
-                                                <Link
-                                                    to="#"
-                                                    className="fw-600 text-grey-500 font-xssss"
-                                                >
-                                                    Member apply
-                                                </Link>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-
-                                    <div className="card w-100 shadow-xss rounded-xxl border-0 mb-3">
-                                        <div className="card-body d-flex align-items-center p-4">
-                                            <h4 className="fw-700 mb-0 font-xssss text-grey-900">Suggest
-                                                Pages</h4>
-                                            <Link to="/default-group.html"
-                                                  className="fw-600 ms-auto font-xssss text-primary">See
-                                                all</Link>
-                                        </div>
-                                        <div
-                                            className="card-body d-flex pt-4 ps-4 pe-4 pb-0 overflow-hidden border-top-xs bor-0">
-                                            <img src="/images/g-2.jpg" alt="img"
-                                                 className="img-fluid rounded-xxl mb-2"/>
-                                        </div>
-                                        <div
-                                            className="card-body d-flex align-items-center pt-0 ps-4 pe-4 pb-4">
-                                            <Link to="#"
-                                                  className="p-2 lh-28 w-100 bg-grey text-grey-800 text-center font-xssss fw-700 rounded-xl"><i
-                                                className="feather-external-link font-xss me-2"></i> Like
-                                                Page</Link>
-                                        </div>
-
-                                        <div
-                                            className="card-body d-flex pt-0 ps-4 pe-4 pb-0 overflow-hidden">
-                                            <img src="/images/g-3.jpg" alt="img"
-                                                 className="img-fluid rounded-xxl mb-2 bg-lightblue"/>
-                                        </div>
-                                        <div
-                                            className="card-body d-flex align-items-center pt-0 ps-4 pe-4 pb-4">
-                                            <Link to="#"
-                                                  className="p-2 lh-28 w-100 bg-grey text-grey-800 text-center font-xssss fw-700 rounded-xl"><i
-                                                className="feather-external-link font-xss me-2"></i> Like
-                                                Page</Link>
-                                        </div>
-
-
-                                    </div>
-
-
-                                    <div className="card w-100 shadow-xss rounded-xxl border-0 mb-3">
-                                        <div className="card-body d-flex align-items-center  p-4">
-                                            <h4 className="fw-700 mb-0 font-xssss text-grey-900">Event</h4>
-                                            <Link to="/default-event.html"
-                                                  className="fw-600 ms-auto font-xssss text-primary">See
-                                                all</Link>
-                                        </div>
-                                        <div
-                                            className="card-body d-flex pt-0 ps-4 pe-4 pb-3 overflow-hidden">
-                                            <div className="bg-success me-2 p-3 rounded-xxl"><h4
-                                                className="fw-700 font-lg ls-3 lh-1 text-white mb-0"><span
-                                                className="ls-1 d-block font-xsss text-white fw-600">FEB</span>22
-                                            </h4>
-                                            </div>
-                                            <h4 className="fw-700 text-grey-900 font-xssss mt-2">Meeting
-                                                with
-                                                clients <span
-                                                    className="d-block font-xsssss fw-500 mt-1 lh-4 text-grey-500">41 madison ave, floor 24 new work, NY 10010</span>
-                                            </h4>
-                                        </div>
-
-                                        <div
-                                            className="card-body d-flex pt-0 ps-4 pe-4 pb-3 overflow-hidden">
-                                            <div className="bg-warning me-2 p-3 rounded-xxl"><h4
-                                                className="fw-700 font-lg ls-3 lh-1 text-white mb-0"><span
-                                                className="ls-1 d-block font-xsss text-white fw-600">APR</span>30
-                                            </h4>
-                                            </div>
-                                            <h4 className="fw-700 text-grey-900 font-xssss mt-2">Developer
-                                                Programe <span
-                                                    className="d-block font-xsssss fw-500 mt-1 lh-4 text-grey-500">41 madison ave, floor 24 new work, NY 10010</span>
-                                            </h4>
-                                        </div>
-
-                                        <div
-                                            className="card-body d-flex pt-0 ps-4 pe-4 pb-3 overflow-hidden">
-                                            <div className="bg-primary me-2 p-3 rounded-xxl"><h4
-                                                className="fw-700 font-lg ls-3 lh-1 text-white mb-0"><span
-                                                className="ls-1 d-block font-xsss text-white fw-600">APR</span>23
-                                            </h4>
-                                            </div>
-                                            <h4 className="fw-700 text-grey-900 font-xssss mt-2">Aniversary
-                                                Event <span
-                                                    className="d-block font-xsssss fw-500 mt-1 lh-4 text-grey-500">41 madison ave, floor 24 new work, NY 10010</span>
-                                            </h4>
-                                        </div>
-
-                                    </div>
                                 </div>
                             </div>
                         )}

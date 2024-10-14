@@ -1,28 +1,43 @@
 import React from 'react';
 import {useState , useEffect} from "react";
 import {Link} from 'react-router-dom';
+import {fetchUserData, getNotifications} from "../Services/api";
 
 
 export const Navbar = ({handleChatToggle}) => {
+    const [isNotifDropdown, setNotifDropdown] = useState(false);
+    const [notifications, setNotifications] = useState([]);
+    const [loading, setLoading] = useState(false);  // Loading state for feedback
+
+    const handleDropdownToggle = () => {
+        setNotifDropdown(!isNotifDropdown);
+    };
+
+    useEffect(() => {
+        if (isNotifDropdown) {
+            // Fetch notifications when dropdown is opened
+            setLoading(true);
+            getNotifications()
+                .then(notificationsData => {
+                    setNotifications(notificationsData);
+                    setLoading(false);
+                })
+                .catch(err => {
+                    setError('Failed to load notifications');
+                    setLoading(false);
+                });
+        }
+    }, [isNotifDropdown]);
+
     const [isNavActive, setIsNavActive] = useState(false);
     const [isSearchVisible, setIsSearchVisible] = useState(false);
-
-
     // Toggle navigation active state
     const toggleNavActive = () => {
         setIsNavActive(prev => !prev);
     };
 
-
-
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    //notification drop down
-    const [isNotifDropdown, setIsNotifDropdown] = useState(false);
 
-    // Toggle dropdown visibility
-    const handleDropdownToggle = () => {
-        setIsNotifDropdown(!isNotifDropdown);
-    };
 
 // Setting dropdown color
     const toggleDropdown = () => {
@@ -37,7 +52,42 @@ export const Navbar = ({handleChatToggle}) => {
     };
 
 
+    const [userData, setUserData] = useState({
+        username: '',
+        email: '',
+        image: '',
+    });
+    const [originalData, setOriginalData] = useState({}); // Store original user data
+    const [error, setError] = useState(null);
 
+    useEffect(() => {
+        const getUserData = async () => {
+            try {
+                const data = await fetchUserData(); // Fetch user data from your API
+                console.log('Fetched user data:', data);
+
+                if (data && data.user) {
+                    // Store the user_id in localStorage
+                    localStorage.setItem('user_id', data.user.id); // Assuming `id` is the field for user ID
+
+                    // Set the user data for display and original data for comparison
+                    const userDataFromApi = {
+                        username: data.user.name,
+                        email: data.user.email,
+                        image: data.user.image,
+                    };
+                    setUserData(userDataFromApi);
+                    setOriginalData(userDataFromApi); // Store original data
+                } else {
+                    setError('Failed to load user data.');
+                }
+            } catch (err) {
+                console.error('Failed to fetch user data:', err);
+                setError(`An error occurred: ${err.message}`);
+            }
+        };
+        getUserData();
+    }, []);
 
 
 
@@ -102,14 +152,12 @@ export const Navbar = ({handleChatToggle}) => {
                        style={{padding: 'inherit'}}></i>
                 </Link>
 
-
                 {/* Notification Icon */}
-                <Link
-                    to="#"
-                    className={`p-2 text-center ms-auto menu-icon ${isNotifDropdown ? 'show' : ''}`}
-                    id="dropdownMenu3"
-                    onClick={handleDropdownToggle}
-                    aria-expanded={isNotifDropdown ? 'true' : 'false'}
+                <Link to="#"
+                      className={`p-2 text-center ms-auto menu-icon ${isNotifDropdown ? 'show' : ''}`}
+                      id="dropdownMenu3"
+                      onClick={handleDropdownToggle}
+                      aria-expanded={isNotifDropdown ? 'true' : 'false'}
                 >
                     <span className="dot-count bg-warning"></span>
                     <i className="feather-bell font-xl text-current"></i>
@@ -129,39 +177,27 @@ export const Navbar = ({handleChatToggle}) => {
                     data-popper-placement={isNotifDropdown ? 'bottom-end' : undefined}
                 >
                     <h4 className="fw-700 font-xss mb-4">Notification</h4>
-                    <div className="card bg-transparent-card w-100 border-0 ps-5 mb-3">
-                        <img src="images/user-8.png" alt="user" className="w40 position-absolute left-0"/>
-                        <h5 className="font-xsss text-grey-900 mb-1 mt-0 fw-700 d-block">
-                            Hendrix Stamp
-                            <span className="text-grey-400 font-xsssss fw-600 float-right mt-1"> 3 min</span>
-                        </h5>
-                        <h6 className="text-grey-500 fw-500 font-xssss lh-4">There are many variations of pass..</h6>
-                    </div>
-                    <div className="card bg-transparent-card w-100 border-0 ps-5 mb-3">
-                        <img src="images/user-4.png" alt="user" className="w40 position-absolute left-0"/>
-                        <h5 className="font-xsss text-grey-900 mb-1 mt-0 fw-700 d-block">
-                            Goria Coast
-                            <span className="text-grey-400 font-xsssss fw-600 float-right mt-1"> 2 min</span>
-                        </h5>
-                        <h6 className="text-grey-500 fw-500 font-xssss lh-4">Mobile Apps UI Designer is require..</h6>
-                    </div>
-                    <div className="card bg-transparent-card w-100 border-0 ps-5 mb-3">
-                        <img src="images/user-7.png" alt="user" className="w40 position-absolute left-0"/>
-                        <h5 className="font-xsss text-grey-900 mb-1 mt-0 fw-700 d-block">
-                            Surfiya Zakir
-                            <span className="text-grey-400 font-xsssss fw-600 float-right mt-1"> 1 min</span>
-                        </h5>
-                        <h6 className="text-grey-500 fw-500 font-xssss lh-4">Mobile Apps UI Designer is require..</h6>
-                    </div>
-                    <div className="card bg-transparent-card w-100 border-0 ps-5">
-                        <img src="images/user-6.png" alt="user" className="w40 position-absolute left-0"/>
-                        <h5 className="font-xsss text-grey-900 mb-1 mt-0 fw-700 d-block">
-                            Victor Exrixon
-                            <span className="text-grey-400 font-xsssss fw-600 float-right mt-1"> 30 sec</span>
-                        </h5>
-                        <h6 className="text-grey-500 fw-500 font-xssss lh-4">Mobile Apps UI Designer is require..</h6>
-                    </div>
+
+                    {loading ? (
+                        <p>Loading...</p>
+                    ) : error ? (
+                        <p>{error}</p>
+                    ) : notifications.length ? (
+                        notifications.map((notif, index) => (
+                            <div key={index} className="card bg-transparent-card w-100 border-0 ps-5 mb-3">
+                                <img src={notif.sender.image}  alt="user" className="w40 position-absolute left-0" />
+                                <h5 className="font-xsss text-grey-900 mb-1 mt-0 fw-700 d-block">
+                                    {notif.sender.username}
+                                    <span className="text-grey-400 font-xsssss fw-600 float-right mt-1">{notif.timeAgo}</span>
+                                </h5>
+                                <h6 className="text-grey-500 fw-500 font-xssss lh-4">{notif.message}</h6>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No new notifications</p>
+                    )}
                 </div>
+
                 {/* Notification Dropdown  end*/}
                 {/* setting ic end*/}
                 <Link to="#" className="p-2 text-center ms-3 menu-icon chat-active-btn " onClick={handleChatToggle}>
@@ -171,7 +207,12 @@ export const Navbar = ({handleChatToggle}) => {
 
 
                 <Link to="/default-settings" className="p-0 ms-3 menu-icon">
-                    <img src="/images/profile-4.png" alt="user" className="w40 mt--1"/>
+                    <img
+                        src={userData.image || "images/default-avatar.jpg"}
+                         alt="user" className="w40 mt--1"
+                        style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+
+                    />
 
                 </Link>
             </div>
@@ -194,24 +235,14 @@ export const Navbar = ({handleChatToggle}) => {
                                         <span>Newsfeed</span>
                                     </Link>
                                 </li>
-                                <li>
-                                    <Link to="/default-badge" className="nav-content-bttn open-font">
-                                        <i className="feather-award btn-round-md bg-red-gradiant me-3"></i>
-                                        <span>Badges</span>
-                                    </Link>
-                                </li>
+
                                 <li>
                                     <Link to="/default-stories" className="nav-content-bttn open-font">
                                         <i className="feather-globe btn-round-md bg-gold-gradiant me-3"></i>
                                         <span>Explore Stories</span>
                                     </Link>
                                 </li>
-                                <li>
-                                    <Link to="/default-group" className="nav-content-bttn open-font">
-                                        <i className="feather-zap btn-round-md bg-mini-gradiant me-3"></i>
-                                        <span>Popular Groups</span>
-                                    </Link>
-                                </li>
+
                                 <li>
                                     <Link to="/user-page" className="nav-content-bttn open-font">
                                         <i className="feather-user btn-round-md bg-primary me-3"></i>
@@ -222,40 +253,6 @@ export const Navbar = ({handleChatToggle}) => {
                             </ul>
                         </div>
 
-                        <div
-                            className="nav-wrap bg-white bg-transparent-card rounded-xxl shadow-xss pt-3 pb-1 mb-2">
-                            <div className="nav-caption fw-600 font-xssss text-grey-500"><span>More </span>Pages
-                            </div>
-                            <ul className="mb-3">
-                                <li>
-                                    <Link to="/default-emailbox" className="nav-content-bttn open-font">
-                                        <i className="font-xl text-current feather-inbox me-3"></i>
-                                        <span>Email Box</span>
-                                        <span className="circle-count bg-warning mt-1">584</span>
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/default-hotel" className="nav-content-bttn open-font">
-                                        <i className="font-xl text-current feather-home me-3"></i>
-                                        <span>Near Hotel</span>
-                                    </Link>
-                                </li>
-
-
-                                <li>
-                                    <Link to="/default-event" className="nav-content-bttn open-font">
-                                        <i className="font-xl text-current feather-map-pin me-3"></i>
-                                        <span>Latest Event</span>
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/default-live-stream" className="nav-content-bttn open-font">
-                                        <i className="font-xl text-current feather-youtube me-3"></i>
-                                        <span>Live Stream</span>
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
 
                         <div className="nav-wrap bg-white bg-transparent-card rounded-xxl shadow-xss pt-3 pb-1">
                             <div className="nav-caption fw-600 font-xssss text-grey-500"><span></span> Account
@@ -311,7 +308,11 @@ export const Navbar = ({handleChatToggle}) => {
                 <Link to="/shop-2" className="nav-content-bttn"><i className="feather-layers"></i></Link>
 
                 <Link to="/default-settings" className="nav-content-bttn">
-                    <img src="images/female-profile.png" alt="user" className="w30 shadow-xss"/></Link>
+                    <img
+                        src={userData.image || '/images/profile-2.png'}
+                        alt="user-avatar"
+                        className="float-right p-1 bg-white rounded-circle w-100"
+                    /> </Link>
             </div>
             {/* Search Bar with dynamic class */}
             <div className={`app-header-search ${isSearchVisible ? 'show' : ''}`}>

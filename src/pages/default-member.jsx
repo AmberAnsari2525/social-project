@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {getFriend, addFriend} from "../Services/api"; // Import the addFriend API
+import {getFriend, acceptFriend} from "../Services/api"; // Import the addFriend API
 
 const FriendsList = () => {
     const [friends, setFriends] = useState([]); // State to store friends
@@ -28,22 +28,18 @@ const FriendsList = () => {
     }, []);
 
     // Handler to add friend
-    const handleAddFriend = async (friendId) => {
-        try {
-            const response = await addFriend(friendId); // Call the API to add friend
-            if (response.status) {
-                // Update the friends state to reflect the new status
-                setFriends(prevFriends =>
-                    prevFriends.map(friend =>
-                        friend.receiver.id === friendId ? {...friend, status: 1} : friend
-                    )
-                );
-            } else {
-                setError("Failed to add friend.");
+    const handleAcceptFriend = async (id) => {
+        console.log('Accepting friend request with ID:', id); // Log before acceptance
+        if (id) {
+            try {
+                const result = await  acceptFriend(id);
+                console.log('Friend request accepted:', result);
+                // You can add logic here after successful acceptance (e.g., updating the UI)
+            } catch (error) {
+                console.error('Error accepting friend request:', error.message);
             }
-        } catch (error) {
-            console.error("Error adding friend:", error);
-            setError("Could not add friend. Please try again.");
+        } else {
+            console.error('Friend ID is undefined, cannot accept request.');
         }
     };
 
@@ -101,7 +97,7 @@ const FriendsList = () => {
                                                         {friend.status === 0 ? (
                                                             <button
                                                                 className="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-success font-xsssss fw-700 ls-lg text-white"
-                                                                onClick={() => handleAddFriend(friend.sender.id)} // Pass friend ID to the handler
+                                                                onClick={() => handleAcceptFriend(friend.sender.id)} // Pass friend ID to the handler
                                                             >
                                                                 ADD FRIEND
                                                             </button>

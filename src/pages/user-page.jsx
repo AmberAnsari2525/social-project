@@ -1,30 +1,107 @@
 import React from 'react';
 import '../css/style.css';
-import {useState, useEffect} from 'react'
-import {
-    addComment,
-    addPost,
-    fetchUserData,
-    getFriend,
-    getCommentsById,
-    sharePosts,
-    gettingPostByID,
-    gettingPost
-} from "../Services/api";
-import {Link} from "react-router-dom";
+import {useState,useEffect} from 'react'
+import {addComment, addPost, fetchUserData, getCommentsById, sharePosts, userGetPost} from "../Services/api";
+import moment from 'moment';
+import {Link, useParams} from "react-router-dom";
 
-const UserProfile = ({userId }) => {
-    const [isReactionActive, setIsReactionActive] = useState(null); // To track which post's emoji wrap is active
+const UserProfile = () => {
+    const {id} =useParams();
+    const [mainContentLoading, setMainContentLoading] = useState(true); //main conntent lodadin state
+    //mIN CONTENT Loading
+    useEffect(() => {
+        // Simulate loading for main content for 3 seconds
+        const mainContentTimer = setTimeout(() => {
+            setMainContentLoading(false);
+        }, 3000);
 
-    // Handle reaction click
-    const handleReactionClick = (postId) => {
-        // Toggle the emoji wrap for the clicked post
-        setIsReactionActive((prevActivePost) => (prevActivePost === postId ? null : postId));
+        // Cleanup the timers when the component unmounts
+        return () => {
+            clearTimeout(mainContentTimer);
+
+        };
+    }, []);
+
+
+    const [createPost, setCreatePost] = useState({
+        content: '',
+        media: [], // Still keeping media array for handling files
+        media_link: [], // Keep media_link as an array
+        post_type: ''
+    });
+
+// Handle form field changes
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setCreatePost((prevState) => ({
+            ...prevState,
+            [name]: value
+        }));
     };
-    const [shareData, setShareData] = useState(null); //state share post
-    const [shareError, setShareError] = useState(null); // state share error
-    const [copySuccess, setCopySuccess] = useState(false); // State for copy success message
-    // State for managing the Create Post form visibility and data
+
+// Handle file input for both images and videos
+    const handleMediaChange = (e) => {
+        const files = Array.from(e.target.files);
+        console.log("Selected files:", files); // Debugging file selection
+        setCreatePost((prevState) => ({
+            ...prevState,
+            media_link: [...prevState.media_link, ...files] // Storing files in media_link
+        }));
+    };
+
+// Handle form submission create post
+    const postHandleCreate = async (e) => {
+        e.preventDefault();
+        setError(null);
+        const formData = new FormData();
+        formData.append('content', createPost.content);
+
+        // Determine post type (image/video/text)
+        let postType = 'text';
+        if (createPost.media_link.length > 0) {
+            const mediaType = createPost.media_link[0].type.startsWith('image') ? 'image' : 'video';
+            postType = mediaType;
+        }
+        formData.append('post_type', postType);
+
+        // Append media_link (files)
+        createPost.media_link.forEach((file) => {
+            if (file && (file.type.startsWith('image') || file.type.startsWith('video'))) {
+                formData.append('media_link', file); // Change 'media' to 'media_link'
+            }
+        });
+
+        // API call
+        try {
+            const response = await addPost(formData); // Call the function to post the data
+            console.log('Post created successfully:', response);
+            // Clear the form after successful submission
+            setCreatePost({
+                content: '',
+                media: [], // Clear media array
+                media_link: [], // Clear media_link array
+                post_type: ''
+            });
+        } catch (error) {
+            console.error('Error creating post:', error);
+            setError('Error occurred while creating the post.');
+        }
+    };
+
+
+// This function should not call postHandleCreate without the event
+    const handleCreatePostClick = (e) => {
+        postHandleCreate(e); // Pass the event object to postHandleCreate
+    };
+    // hande Reomve Media
+    const handleRemoveMedia = (index) => {
+        setCreatePost((prevState) => {
+            const updatedMedia = [...prevState.media_link];
+            updatedMedia.splice(index, 1);
+            return {...prevState, media_link: updatedMedia};
+        });
+    };
+
     const [userData, setUserData] = useState({
         username: '',
         email: '',
@@ -35,9 +112,14 @@ const UserProfile = ({userId }) => {
     useEffect(() => {
         const getUserData = async () => {
             try {
-                const data = await fetchUserData(); // Fetch from your API
+                const data = await fetchUserData(); // Fetch user data from your API
                 console.log('Fetched user data:', data);
+
                 if (data && data.user) {
+                    // Store the user_id in localStorage
+                    localStorage.setItem('user_id', data.user.id); // Assuming `id` is the field for user ID
+
+                    // Set the user data for display
                     setUserData({
                         username: data.user.name,
                         email: data.user.email,
@@ -53,120 +135,25 @@ const UserProfile = ({userId }) => {
         };
         getUserData();
     }, []);
-    //creatpost api
-
-    const [createPost, setCreatePost] = useState({
-        content: '',
-        media: [], // Ensure media is initialized as an array
-        media_link: [] // Ensure media_link is initialized as an array
-    });
 
 
-// Handle form field changes
-    const handleChange = (e) => {
-        const {name, value} = e.target;
-        setCreatePost((prevState) => ({
-            ...prevState,
-            [name]: value
-        }));
-    };
+    //handle fetch post user id
+    const [posts, setPosts] = useState([]); // State to hold user posts
+    const [loading, setLoading] = useState(true); // Loading state
 
-// Handle file input for both images and videos
-    const handleMediaChange = (e) => {
-        const files = Array.from(e.target.files);
-        console.log("Selected files:", files); // Log the files to see if they are correctly handled
-        setCreatePost((prevState) => ({
-            ...prevState,
-            media_link: [...prevState.media_link, ...files]
-        }));
-    };
-
-// Handle form submission
-    const postHandleSubmit = async (e) => {
-        e.preventDefault();
-        setError(null);
-
-        // Validation: Ensure either content or media is provided
-        if (createPost.content.trim() === '' && createPost.media_link.length === 0) {
-            setError("Post content or media is required.");
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('content', createPost.content);
-
-        // Determine post type (image/video/text)
-        let postType = 'text';
-        if (createPost.media_link.length > 0) {
-            const mediaType = createPost.media_link[0].type.startsWith('image') ? 'image' : 'video';
-            postType = mediaType;
-        }
-        formData.append('post_type', postType);
-
-        // Append media files
-        createPost.media_link.forEach((file) => {
-            if (file && (file.type.startsWith('image') || file.type.startsWith('video'))) {
-                formData.append('media', file);
-            }
-        });
-
-        // Log form data for debugging
-        for (let pair of formData.entries()) {
-            console.log(pair[0], pair[1]); // Check that media and content are properly appended
-        }
-
-        try {
-            const result = await addPost(formData);
-            console.log('Post added successfully:', result);
-
-            // Check the API response structure for the correct media link path
-            const mediaLinks = result.data.post.media_link || []; // Adjust based on your API response
-
-            // Update state with new media links
-            setCreatePost({
-                content: '',
-                media: [], // Reset media
-                media_link: mediaLinks // Ensure media links are stored
-            });
-        } catch (err) {
-            // Error handling
-            if (err.response && err.response.data) {
-                console.error('API Error:', err.response.data.message, err.response.data);
-                setError(err.response.data.message || 'Failed to add the post.');
-            } else {
-                console.error('Unexpected error:', err);
-                setError('An unexpected error occurred.');
-            }
-        }
-    };
-
-
-// This function should not call postHandleSubmit without the event
-    const handleCreatePostClick = (e) => {
-        postHandleSubmit(e); // Pass the event object to postHandleSubmit
-    };
-
-    const handleRemoveMedia = (index) => {
-        setCreatePost((prevState) => {
-            const updatedMedia = [...prevState.media_link];
-            updatedMedia.splice(index, 1);
-            return {...prevState, media_link: updatedMedia};
-        });
-    };
-
-    //get post api
-
-    const [getPost, setGetPost] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-
-//fetching Posts by user uid
     useEffect(() => {
 
-        const fetchPosts = async (userId ) => {
-
+        const fetchPosts = async () => {
             try {
-                const data = await gettingPostByID(userId );
+                // Get the user_id from localStorage
+                const userId = localStorage.getItem('user_id');
+                if (!userId) {
+                    console.error('No user ID found in localStorage.');
+                    return;
+                }
+
+                // Pass the userId to your userGetPost function
+                const data = await userGetPost(userId);
                 console.log('Post fetch successfully by UserID:', data);
 
                 // Process the posts to check for media link and gallery images
@@ -181,7 +168,7 @@ const UserProfile = ({userId }) => {
                     return post;
                 });
 
-                setGetPost(processedPosts);
+                setPosts(processedPosts);
 
                 // Log the fetched posts
                 processedPosts.forEach(post => {
@@ -201,44 +188,47 @@ const UserProfile = ({userId }) => {
         };
 
         fetchPosts();
-    }, [userId ]);
-
-
-//mIN CONTENT Loading
-    const [mainContentLoading, setMainContentLoading] = useState(true);
-    useEffect(() => {
-        // Simulate loading for main content for 3 seconds
-        const mainContentTimer = setTimeout(() => {
-            setMainContentLoading(false);
-        }, 3000);
-
-        // Cleanup the timers when the component unmounts
-        return () => {
-            clearTimeout(mainContentTimer);
-
-        };
     }, []);
 
+    const [isReactionActive, setIsReactionActive] = useState(null); // To track which post's emoji wrap is active
 
+    //share post sate
+    const [shareData, setShareData] = useState(null); //state share post
+    const [shareError, setShareError] = useState(null); // state share error
+    const [copySuccess, setCopySuccess] = useState(false); // State for copy success message
+
+
+    // comment state
+    const [comments, setComments] = useState([]);
+
+    const [newComment, setNewComment] = useState('');
+    const [activePost, setActivePost] = useState(null);  // Track the active post
+    const [loadingComments, setLoadingComments] = useState(false);
+    const [showComments, setShowComments] = useState(false);
+
+
+    // Handle reaction click
+    const handleReactionClick = (postId) => {
+        // Toggle the emoji wrap for the clicked post
+        setIsReactionActive((prevActivePost) => (prevActivePost === postId ? null : postId));
+    };
     // handle share
     const handleShare = async (postId) => {
-
-        // Log postId and user_id to verify their values
-        console.log("Sharing post with ID:", postId,);
+        console.log("Sharing post with ID:", postId);
 
         if (!postId) {
             console.log("postId or user_id is missing");
             return;
         }
 
-        const shareData = {post_id: postId,};
+        const shareData = {post_id: postId};
 
         try {
             const data = await sharePosts(shareData);
             setShareData(data);
             console.log("Shared successfully:", data);
         } catch (err) {
-            console.log("Error response:", err.response); // Log the full response
+            console.log("Error response:", err.response);
             if (err.response && err.response.status === 404) {
                 setShareError('Post not found. Please make sure the post exists.');
             } else if (err.response && err.response.data) {
@@ -252,6 +242,7 @@ const UserProfile = ({userId }) => {
     };
 
 
+// handle copy Link
     const handleCopyLink = (event, link) => {
         event.stopPropagation();
         navigator.clipboard.writeText(link) // Copy the link to the clipboard
@@ -263,73 +254,110 @@ const UserProfile = ({userId }) => {
                 console.error('Failed to copy: ', err);
             });
     };
-    const [comments, setComments] = useState([]);
-    const [newComment, setNewComment] = useState('');
-    const [activePost, setActivePost] = useState(null);  // Track the active post
-    const [loadingComments, setLoadingComments] = useState(false);
-    const [showComments, setShowComments] = useState(false);
 
-    // Load comments when the comment icon is clicked
-    const handleShowComments = async (postId) => {
-        if (activePost === postId) {
-            // Toggle off comments for the same post
-            setActivePost(null);
-            setShowComments(false);
-        } else {
-            // Set the new active post
-            setActivePost(postId);
-            setShowComments(true);
-            setLoadingComments(true);
-            try {
-                const postComments = await getCommentsById(postId);
-                setComments(postComments); // Save the comments for the active post
-            } catch (error) {
-                console.error('Error fetching comments:', error);
-            } finally {
-                setLoadingComments(false);
-            }
+
+    const [loadingAddComment, setLoadingAddComment] = useState(false);
+
+// Fetch comments for the post
+    const fetchComments = async (postId) => {
+        setLoadingComments(true);
+        try {
+            const postComments = await getCommentsById(postId); // Fetch comments by post ID
+            setComments(Array.isArray(postComments) ? postComments : []); // Ensure comments is an array
+        } catch (err) {
+            console.error("Error fetching comments:", err);
+        } finally {
+            setLoadingComments(false);
         }
     };
 
-    // Handle new comment submission
+
+
+    // Handle showing comments
+    const handleShowComments = async (postId) => {
+        if (activePost === postId) {
+            setActivePost(null);
+            setComments([]); // Clear comments when collapsing
+        } else {
+            setActivePost(postId);
+            await fetchComments(postId); // Fetch comments when opening
+        }
+    };
 
     // Handle new comment submission
     const handleAddComment = async (e, postId) => {
         e.preventDefault();
-
-        // Validate comment
-        if (!newComment.trim()) {
-            console.error("Comment is required");
-            return;
-        }
-
-        // Log to see if the data is correct
-        console.log("New Comment:", newComment);
-        console.log("Post ID:", postId);
+        setLoadingAddComment(true);
 
         try {
-            // Send request to add comment with both post ID and comment text
-            const addedComment = await addComment(postId, newComment); // Updated to send comment
-            setComments([addedComment, ...comments]); // Add new comment to the list
-            setNewComment(''); // Clear the input after adding the comment
-            console.log('comment add succfully')
+            const addedComment = await addComment(postId, newComment); // Add the comment
+            setComments([addedComment, ...comments]); // Add the new comment to the state
+            setNewComment(''); // Clear the input field
         } catch (error) {
-            // Safely access error properties
-            const errorMessage = error.response ? (error.response.data ? error.response.data.message : "Unknown error occurred") : error.message;
-            console.error("API Response Error:", errorMessage); // Centralized error handling
+            console.error("Error adding comment:", error);
+            alert("Failed to add comment: " + (error.response ? error.response.data.message : error.message));
+        } finally {
+            setLoadingAddComment(false);
+            await fetchComments(postId); // Fetch updated comments for the specific post
         }
     };
 
+// for time
+    const formatTimeAgo = (createdAt) => {
+        const now = new Date();
+        const postTime = new Date(createdAt);
+        const diffInMs = now - postTime;
+        const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        const diffInDays = Math.floor(diffInHours / 24);
+
+        if (diffInMinutes < 60) {
+            return `${diffInMinutes} minutes ago`;
+        } else if (diffInHours < 24) {
+            return `${diffInHours} hour${diffInHours === 1 ? '' : 's'} ago`;
+        } else {
+            return `${diffInDays} day${diffInDays === 1 ? '' : 's'} ago`;
+        }
+    };
 
     return (
-        <div>
+        <div >
             <div className="middle-sidebar-bottom">
                 <div className="middle-sidebar-left">
+                    {/* Content or loader here */}
+                    {mainContentLoading ? (
+                        <div className="preloader-wrap p-3">
+                            <div className="box shimmer">
+                                <div className="lines">
+                                    <div className="line s_shimmer"></div>
+                                    <div className="line s_shimmer"></div>
+                                    <div className="line s_shimmer"></div>
+                                    <div className="line s_shimmer"></div>
+                                </div>
+                            </div>
+                            <div className="box shimmer mb-3">
+                                <div className="lines">
+                                    <div className="line s_shimmer"></div>
+                                    <div className="line s_shimmer"></div>
+                                    <div className="line s_shimmer"></div>
+                                    <div className="line s_shimmer"></div>
+                                </div>
+                            </div>
+                            <div className="box shimmer">
+                                <div className="lines">
+                                    <div className="line s_shimmer"></div>
+                                    <div className="line s_shimmer"></div>
+                                    <div className="line s_shimmer"></div>
+                                    <div className="line s_shimmer"></div>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="card w-100 border-0 p-0 bg-white shadow-xss rounded-xxl">
                                 <div className="card-body h250 p-0 rounded-xxl overflow-hidden m-3">
-                                    <img src="images/u-bg.jpg" alt="background"/>
+                                    <img src="/images/u-bg.jpg" alt="background"/>
                                 </div>
                                 <div className="card-body p-0 position-relative">
                                     <figure
@@ -337,7 +365,7 @@ const UserProfile = ({userId }) => {
                                         style={{top: '-40px', left: '30px'}}
                                     >
                                         <img
-                                            src={userData.image || 'images/profile-2.png'}
+                                            src={userData.image || '/images/profile-2.png'}
                                             alt="user-avatar"
                                             className="float-right p-1 bg-white rounded-circle w-100"
                                         />
@@ -409,7 +437,7 @@ const UserProfile = ({userId }) => {
                                                 href="#navtabs3"
                                                 data-toggle="tab"
                                             >
-                                                Discussion
+                                            Discussion
                                             </a>
                                         </li>
                                         <li className="list-inline-item me-5">
@@ -459,7 +487,7 @@ const UserProfile = ({userId }) => {
                                         <div className="col-3">
                                             <div className="chart-container w50 h50">
                                                 <div className="chart position-relative" data-percent="78"
-                                                     style={{backgroundColor: '#a7d212'}}>
+                                                style={{backgroundColor:'#a7d212'}}>
                                                     <span className="percent fw-700 font-xsss" data-after="%">78</span>
                                                 </div>
                                             </div>
@@ -511,29 +539,29 @@ const UserProfile = ({userId }) => {
                                 </div>
                                 <div className="card-body d-block pt-0 pb-2">
                                     <div className="row">
-                                        <div className="col-6 mb-2 pe-1"><a href="images/e-2.jpg"
+                                        <div className="col-6 mb-2 pe-1"><a href="/images/e-2.jpg"
                                                                             data-lightbox="roadtrip"><img
-                                            src="images/e-2.jpg" alt="image" className="img-fluid rounded-3 w-100"/></a>
+                                            src="/images/e-2.jpg" alt="image" className="img-fluid rounded-3 w-100"/></a>
                                         </div>
                                         <div className="col-6 mb-2 ps-1"><a href="images/e-3.jpg"
                                                                             data-lightbox="roadtrip"><img
-                                            src="images/e-3.jpg" alt="image" className="img-fluid rounded-3 w-100"/></a>
+                                            src="/images/e-3.jpg" alt="image" className="img-fluid rounded-3 w-100"/></a>
                                         </div>
                                         <div className="col-6 mb-2 pe-1"><a href="images/e-4.jpg"
                                                                             data-lightbox="roadtrip"><img
-                                            src="images/e-4.jpg" alt="image" className="img-fluid rounded-3 w-100"/></a>
+                                            src="/images/e-4.jpg" alt="image" className="img-fluid rounded-3 w-100"/></a>
                                         </div>
                                         <div className="col-6 mb-2 ps-1"><a href="images/e-5.jpg"
                                                                             data-lightbox="roadtrip"><img
-                                            src="images/e-5.jpg" alt="image" className="img-fluid rounded-3 w-100"/></a>
+                                            src="/images/e-5.jpg" alt="image" className="img-fluid rounded-3 w-100"/></a>
                                         </div>
                                         <div className="col-6 mb-2 pe-1"><a href="images/e-2.jpg"
                                                                             data-lightbox="roadtrip"><img
-                                            src="images/e-2.jpg" alt="image" className="img-fluid rounded-3 w-100"/></a>
+                                            src="/images/e-2.jpg" alt="image" className="img-fluid rounded-3 w-100"/></a>
                                         </div>
                                         <div className="col-6 mb-2 ps-1"><a href="images/e-1.jpg"
                                                                             data-lightbox="roadtrip"><img
-                                            src="images/e-1.jpg" alt="image" className="img-fluid rounded-3 w-100"/></a>
+                                            src="/images/e-1.jpg" alt="image" className="img-fluid rounded-3 w-100"/></a>
                                         </div>
                                     </div>
                                 </div>
@@ -579,31 +607,32 @@ const UserProfile = ({userId }) => {
                             </div>
                         </div>
                         <div className="col-xl-8 col-xxl-9 col-lg-8">
-
-
-                            <div className="card w-100 shadow-xss rounded-xxl border-0 ps-4 pt-4 pe-4 pb-3 mb-3 mt-3">
+                            <div
+                                className="card w-100 shadow-xss rounded-xxl border-0 ps-4 pt-4 pe-4 pb-3 mb-3 mt-3">
                                 <div className="card-body p-0">
+                                    {/* Create Post Button */}
                                     <button
                                         className="font-xssss fw-600 card-body p-0 d-flex align-items-center"
                                         onClick={handleCreatePostClick}
                                         style={{
-                                            color: createPost.content.trim().length === 0 && createPost.media_link.length === 0 ? 'lightgrey' : 'black',
+                                            color: createPost.content.trim().length === 0 && createPost.media_link.length === 0 ? 'lightgrey' : 'black', // Dynamic text color
                                             border: 'inherit',
-                                            background: 'inherit',
+                                            background: 'inherit'
                                         }}
-                                        disabled={createPost.content.trim().length === 0 && createPost.media_link.length === 0}
+                                        disabled={createPost.content.trim().length === 0 && createPost.media_link.length === 0} // Disable when both content and media are empty
                                     >
                                         <i
                                             className={`btn-round-sm font-xs feather-edit-3 me-2 bg-greylight`}
                                             style={{
-                                                color: createPost.content.trim().length === 0 && createPost.media_link.length === 0 ? 'lightgrey' : 'black',
+                                                color: createPost.content.trim().length === 0 && createPost.media_link.length === 0 ? 'lightgrey' : 'black', // Dynamic icon color
                                             }}
                                         ></i>
                                         Create Post
                                     </button>
-                                </div>
 
-                                <form onSubmit={postHandleSubmit}
+
+                                </div>
+                                <form onSubmit={postHandleCreate}
                                       className="card-body p-0 mt-3 position-relative">
                                     <figure className="avatar position-absolute ms-2 mt-1 top-5">
                                         <img src="/images/user-8.png" alt="user"
@@ -620,51 +649,92 @@ const UserProfile = ({userId }) => {
                                         placeholder="What's on your mind?"
                                     ></textarea>
 
-                                    {error && <p className="text-danger">{error}</p>}
 
                                     {/* Display selected images and videos */}
                                     {Array.isArray(createPost.media_link) && createPost.media_link.length > 0 && (
                                         <div className="media-preview mt-3">
-                                            {createPost.media_link.map((file, index) => (
-                                                <div key={index} className="media-item position-relative">
-                                                    {file.type.startsWith('image') ? (
-                                                        <img src={URL.createObjectURL(file)} alt="preview"
-                                                             className="w-100 rounded-xxl mb-2"/>
-                                                    ) : (
-                                                        <video src={URL.createObjectURL(file)} controls
-                                                               className="w-100 rounded-xxl mb-2"></video>
-                                                    )}
-                                                    <button
-                                                        className="close-icon"
-                                                        onClick={() => handleRemoveMedia(index)}
-                                                        style={{
-                                                            position: 'absolute',
-                                                            top: '5px',
-                                                            right: '5px',
-                                                            background: 'none',
-                                                            border: 'none',
-                                                            cursor: 'pointer',
-                                                        }}
-                                                    >
-                                                        <div
-                                                            className="bg-primary rounded-circle d-flex justify-content-center align-items-center"
-                                                            style={{width: '30px', height: '30px'}}
+                                            <div
+                                                className="image-grid"
+                                                style={{
+                                                    display: 'grid',
+                                                    gridTemplateColumns: createPost.media_link.length === 2 ? 'repeat(2, 1fr)' :
+                                                        createPost.media_link.length === 3 ? 'repeat(3, 1fr)' :
+                                                            createPost.media_link.length === 4 ? 'repeat(2, 1fr)' :
+                                                                'repeat(3, 1fr)',
+                                                    gap: '10px',
+                                                }}
+                                            >
+                                                {createPost.media_link.slice(0, 5).map((file, index) => (
+                                                    <div key={index} className="media-item position-relative">
+                                                        {file.type.startsWith('image') ? (
+                                                            <img
+                                                                src={URL.createObjectURL(file)}
+                                                                alt="preview"
+                                                                className="w-100 rounded-xxl"
+                                                                style={{
+                                                                    height: '150px',
+                                                                    objectFit: 'cover'
+                                                                }} // Adjust height for consistent size
+                                                            />
+                                                        ) : (
+                                                            <video
+                                                                src={URL.createObjectURL(file)}
+                                                                controls
+                                                                className="w-100 rounded-xxl"
+                                                                style={{height: '150px', objectFit: 'cover'}}
+                                                            ></video>
+                                                        )}
+
+                                                        {/* Close button for removing media */}
+                                                        <button
+                                                            className="close-icon"
+                                                            onClick={() => handleRemoveMedia(index)}
+                                                            style={{
+                                                                position: 'absolute',
+                                                                top: '5px',
+                                                                right: '5px',
+                                                                background: 'none',
+                                                                border: 'none',
+                                                                cursor: 'pointer',
+                                                            }}
                                                         >
-                                                            <i className="feather-x text-white"></i>
-                                                        </div>
-                                                    </button>
-                                                </div>
-                                            ))}
+                                                            <div
+                                                                className="bg-primary rounded-circle d-flex justify-content-center align-items-center"
+                                                                style={{width: '30px', height: '30px'}}
+                                                            >
+                                                                <i className="feather-x text-white"></i>
+                                                            </div>
+                                                        </button>
+
+                                                        {/* Display indicator if there are more than 5 images */}
+                                                        {index === 4 && createPost.media_link.length > 5 && (
+                                                            <div
+                                                                className="more-indicator position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                                                                style={{
+                                                                    background: 'rgba(0, 0, 0, 0.5)',
+                                                                    top: 0,
+                                                                    left: 0,
+                                                                    color: 'white',
+                                                                    fontSize: '24px',
+                                                                }}
+                                                            >
+                                                                +{createPost.media_link.length - 5}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
                                         </div>
                                     )}
+
+
                                 </form>
+
 
                                 {/* Action buttons below the textarea */}
                                 <div className="card-body d-flex p-0 mt-0">
-                                    <Link
-                                        to="#"
-                                        className="d-flex align-items-center font-xssss fw-600 ls-1 text-grey-700 text-dark pe-4"
-                                    >
+                                    <Link to="#"
+                                          className="d-flex align-items-center font-xssss fw-600 ls-1 text-grey-700 text-dark pe-4">
                                         <i className="font-md text-danger feather-video me-2"></i>
                                         <span className="d-none-xs">Live Video</span>
                                     </Link>
@@ -686,108 +756,71 @@ const UserProfile = ({userId }) => {
                                             onChange={handleMediaChange}
                                         />
                                     </div>
-
-                                    <Link
-                                        to="#"
-                                        className="d-flex align-items-center font-xssss fw-600 ls-1 text-grey-700 text-dark pe-4"
-                                    >
+                                    <Link to="#"
+                                          className="d-flex align-items-center font-xssss fw-600 ls-1 text-grey-700 text-dark pe-4">
                                         <i className="font-md text-warning feather-camera me-2"></i>
                                         <span className="d-none-xs">Feeling/Activity</span>
                                     </Link>
-
                                     <Link to="#" className="ms-auto" id="dropdownMenu4"
-                                          data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i className="ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss"></i>
-                                    </Link>
+                                          data-bs-toggle="dropdown"
+                                          aria-expanded="false"><i
+                                        className="ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss"></i></Link>
                                     <div
                                         className="dropdown-menu dropdown-menu-start p-4 rounded-xxl border-0 shadow-lg"
                                         aria-labelledby="dropdownMenu4">
                                         <div className="card-body p-0 d-flex">
                                             <i className="feather-bookmark text-grey-500 me-3 font-lg"></i>
-                                            <h4 className="fw-600 text-grey-900 font-xssss mt-0 me-4">
-                                                Save Link
-                                                <span
+                                            <h4 className="fw-600 text-grey-900 font-xssss mt-0 me-4">Save
+                                                Link <span
                                                     className="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500">Add this to your saved items</span>
                                             </h4>
                                         </div>
                                         <div className="card-body p-0 d-flex mt-2">
                                             <i className="feather-alert-circle text-grey-500 me-3 font-lg"></i>
-                                            <h4 className="fw-600 text-grey-900 font-xssss mt-0 me-4">
-                                                Hide Post
-                                                <span
+                                            <h4 className="fw-600 text-grey-900 font-xssss mt-0 me-4">Hide
+                                                Post <span
                                                     className="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500">Save to your saved items</span>
                                             </h4>
                                         </div>
                                         <div className="card-body p-0 d-flex mt-2">
                                             <i className="feather-alert-octagon text-grey-500 me-3 font-lg"></i>
-                                            <h4 className="fw-600 text-grey-900 font-xssss mt-0 me-4">
-                                                Hide all from Group
-                                                <span
+                                            <h4 className="fw-600 text-grey-900 font-xssss mt-0 me-4">Hide all
+                                                from Group <span
                                                     className="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500">Save to your saved items</span>
                                             </h4>
                                         </div>
                                         <div className="card-body p-0 d-flex mt-2">
                                             <i className="feather-lock text-grey-500 me-3 font-lg"></i>
-                                            <h4 className="fw-600 mb-0 text-grey-900 font-xssss mt-0 me-4">
-                                                Unfollow Group
-                                                <span
+                                            <h4 className="fw-600 mb-0 text-grey-900 font-xssss mt-0 me-4">Unfollow
+                                                Group <span
                                                     className="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500">Save to your saved items</span>
                                             </h4>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-
                             {/*get post*/}
                             <>
-                                {getPost.map((post, index) => (
+                                {posts.map((post, index) => (
                                     <div key={index}
                                          className="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3">
                                         <div className="card-body p-0 d-flex">
                                             <figure className="avatar me-3">
-                                                <img src={post.user_image || '/images/profile-2.png'} alt="user"
+                                                <img src={userData.image || "/images/user-7.png"} alt="user avatar"
                                                      className="shadow-sm rounded-circle w45"/>
                                             </figure>
-                                            <h4 className="fw-700 text-grey-900 font-xssss mt-1">
-                                                {post.username}
+                                            <h4 className="fw-700 text-grey-900 font-xssss mt-1">  {userData.username || 'User Name'}
                                                 <span
-                                                    className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">{post.timeAgo}</span>
+                                                    className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500"> {formatTimeAgo(post.createdAt)}</span>
                                             </h4>
-                                            <a href="#" className="ms-auto" id="dropdownMenu4"
-                                               data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                className="ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss"></i></a>
+                                            <a href="#" className="ms-auto" id="dropdownMenu7" data-toggle="dropdown"
+                                               aria-haspopup="true" aria-expanded="false">
+                                                <i className="ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss"></i>
+                                            </a>
                                             <div
-                                                className="dropdown-menu dropdown-menu-start p-4 rounded-xxl border-0 shadow-lg"
-                                                aria-labelledby="dropdownMenu4">
-                                                <div className="card-body p-0 d-flex">
-                                                    <i className="feather-bookmark text-grey-500 me-3 font-lg"></i>
-                                                    <h4 className="fw-600 text-grey-900 font-xssss mt-0 me-4">Save
-                                                        Link <span
-                                                            className="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500">Add this to your saved items</span>
-                                                    </h4>
-                                                </div>
-                                                <div className="card-body p-0 d-flex mt-2">
-                                                    <i className="feather-alert-circle text-grey-500 me-3 font-lg"></i>
-                                                    <h4 className="fw-600 text-grey-900 font-xssss mt-0 me-4">Hide
-                                                        Post <span
-                                                            className="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500">Save to your saved items</span>
-                                                    </h4>
-                                                </div>
-                                                <div className="card-body p-0 d-flex mt-2">
-                                                    <i className="feather-alert-octagon text-grey-500 me-3 font-lg"></i>
-                                                    <h4 className="fw-600 text-grey-900 font-xssss mt-0 me-4">Hide
-                                                        all from Group <span
-                                                            className="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500">Save to your saved items</span>
-                                                    </h4>
-                                                </div>
-                                                <div className="card-body p-0 d-flex mt-2">
-                                                    <i className="feather-lock text-grey-500 me-3 font-lg"></i>
-                                                    <h4 className="fw-600 mb-0 text-grey-900 font-xssss mt-0 me-4">Unfollow
-                                                        Group <span
-                                                            className="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500">Save to your saved items</span>
-                                                    </h4>
-                                                </div>
+                                                className="dropdown-menu dropdown-menu-end p-4 rounded-xxl border-0 shadow-lg"
+                                                aria-labelledby="dropdownMenu7">
+                                                {/* Dropdown items */}
                                             </div>
                                         </div>
 
@@ -799,29 +832,158 @@ const UserProfile = ({userId }) => {
                                             </p>
                                         </div>
 
-                                        {/* Display images */}
-                                        {post.post_type === "image" && post.media_link && (
-                                            <img src={post.media_link} alt="Post media" className="w-100 mb-2"/>
-                                        )}
+                                        {/* Combined media link and gallery images into a collage */}
+                                        <div className="media-collage">
+                                            {/* Display media link (image or video) */}
+                                            <div className="row mb-2">
+                                                {/* Combine media_link and gallery_images */}
+                                                {post.media_link && (
+                                                    <>
+                                                        {/* One image (media_link only) */}
+                                                        {(!post.gallery_images || post.gallery_images.length === 0) && (
+                                                            <div className="col-12">
+                                                                {post.post_type === "image" && (
+                                                                    <img src={post.media_link} alt="Post media"
+                                                                         className="w-100 mb-2"/>
+                                                                )}
+                                                                {post.post_type === "video" && (
+                                                                    <video autoPlay loop className="w-100"
+                                                                           controls muted>
+                                                                        <source src={post.media_link}
+                                                                                type="video/mp4"/>
+                                                                        Your browser does not support the video
+                                                                        tag.
+                                                                    </video>
+                                                                )}
+                                                            </div>
+                                                        )}
 
-                                        {/* Display videos */}
-                                        {post.post_type === "video" && post.media_link && (
-                                            <video autoPlay loop className="float-right w-100 mb-2" controls
-                                                   muted>
-                                                <source src={post.media_link} type="video/mp4"/>
-                                                Your browser does not support the video tag.
-                                            </video>
-                                        )}
-                                        {/* Display the gallery images if present */}
-                                        {post.gallery_images && post.gallery_images.length > 0 && (
-                                            <div className="gallery">
-                                                {post.gallery_images.map((image, imgIndex) => (
-                                                    <img key={imgIndex} src={image}
-                                                         alt={`Gallery image ${imgIndex + 1}`}
-                                                         className="w-100 mb-2"/>
-                                                ))}
+                                                        {/* Two images: media_link + 1 gallery image side by side */}
+                                                        {post.gallery_images && post.gallery_images.length === 1 && (
+                                                            <>
+                                                                <div className="col-6">
+                                                                    <img src={post.media_link} alt="Post media"
+                                                                         className="w-100 mb-2"/>
+                                                                </div>
+                                                                <div className="col-6">
+                                                                    <img src={post.gallery_images[0]}
+                                                                         alt="Gallery image 1"
+                                                                         className="w-100 mb-2"/>
+                                                                </div>
+                                                            </>
+                                                        )}
+
+                                                        {/* Three images: media_link + 2 gallery images in a row */}
+                                                        {post.gallery_images && post.gallery_images.length === 2 && (
+                                                            <>
+                                                                <div className="col-4">
+                                                                    <img src={post.media_link} alt="Post media"
+                                                                         className="w-100 mb-2"/>
+                                                                </div>
+                                                                {post.gallery_images.map((image, idx) => (
+                                                                    <div key={idx} className="col-4">
+                                                                        <img src={image}
+                                                                             alt={`Gallery image ${idx + 1}`}
+                                                                             className="w-100 mb-2"/>
+                                                                    </div>
+                                                                ))}
+                                                            </>
+                                                        )}
+
+                                                        {/* Four images: media_link in first row, 2 gallery images in second row */}
+                                                        {post.gallery_images && post.gallery_images.length === 3 && (
+                                                            <>
+                                                                <div className="col-6">
+                                                                    <img src={post.media_link} alt="Post media"
+                                                                         className="w-100 mb-2"/>
+                                                                </div>
+                                                                <div className="col-6">
+                                                                    <img src={post.gallery_images[0]}
+                                                                         alt="Gallery image 1"
+                                                                         className="w-100 mb-2"/>
+                                                                </div>
+                                                                <div className="col-6">
+                                                                    <img src={post.gallery_images[1]}
+                                                                         alt="Gallery image 2"
+                                                                         className="w-100 mb-2"/>
+                                                                </div>
+                                                                <div className="col-6">
+                                                                    <img src={post.gallery_images[2]}
+                                                                         alt="Gallery image 3"
+                                                                         className="w-100 mb-2"/>
+                                                                </div>
+                                                            </>
+                                                        )}
+
+                                                        {/* Five images: media_link + 2 gallery images in first row, 2 gallery images in second row */}
+                                                        {post.gallery_images && post.gallery_images.length === 4 && (
+                                                            <>
+                                                                <div className="col-4">
+                                                                    <img src={post.media_link} alt="Post media"
+                                                                         className="w-100 mb-2"/>
+                                                                </div>
+                                                                <div className="col-4">
+                                                                    <img src={post.gallery_images[0]}
+                                                                         alt="Gallery image 1"
+                                                                         className="w-100 mb-2"/>
+                                                                </div>
+                                                                <div className="col-4">
+                                                                    <img src={post.gallery_images[1]}
+                                                                         alt="Gallery image 2"
+                                                                         className="w-100 mb-2"/>
+                                                                </div>
+                                                                <div className="col-6">
+                                                                    <img src={post.gallery_images[2]}
+                                                                         alt="Gallery image 3"
+                                                                         className="w-100 mb-2"/>
+                                                                </div>
+                                                                <div className="col-6">
+                                                                    <img src={post.gallery_images[3]}
+                                                                         alt="Gallery image 4"
+                                                                         className="w-100 mb-2"/>
+                                                                </div>
+                                                            </>
+                                                        )}
+
+                                                        {/* More than five images: media_link + first 2 gallery images in first row, 2 gallery images in second row, indicator for more */}
+                                                        {post.gallery_images && post.gallery_images.length > 5 && (
+                                                            <>
+                                                                <div className="col-4">
+                                                                    <img src={post.media_link} alt="Post media"
+                                                                         className="w-100 mb-2"/>
+                                                                </div>
+                                                                <div className="col-4">
+                                                                    <img src={post.gallery_images[0]}
+                                                                         alt="Gallery image 1"
+                                                                         className="w-100 mb-2"/>
+                                                                </div>
+                                                                <div className="col-4">
+                                                                    <img src={post.gallery_images[1]}
+                                                                         alt="Gallery image 2"
+                                                                         className="w-100 mb-2"/>
+                                                                </div>
+                                                                <div className="col-6">
+                                                                    <img src={post.gallery_images[2]}
+                                                                         alt="Gallery image 3"
+                                                                         className="w-100 mb-2"/>
+                                                                </div>
+                                                                <div
+                                                                    className="col-6 position-relative text-center">
+                                                                    <img src={post.gallery_images[3]}
+                                                                         alt="Gallery image 4"
+                                                                         className="w-100 mb-2"/>
+                                                                    <div className="plus-indicator-overlay">
+                                                                                <span
+                                                                                    className="plus-indicator">+{post.gallery_images.length - 5}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </>
+                                                        )}
+                                                    </>
+                                                )}
                                             </div>
-                                        )}
+                                        </div>
+
 
                                         <div className="card-body d-flex p-0 mt-3">
                                             <Link to="#"
@@ -859,44 +1021,46 @@ const UserProfile = ({userId }) => {
                                                   onClick={() => handleShowComments(post.id)}>
                                                 <i className="feather-message-circle text-dark text-grey-900 btn-round-sm font-lg"></i>
                                                 <span className="d-none-xss">{post.comments} Comment</span>
+
                                             </Link>
                                             <div
                                                 className="dropdown-menu dropdown-menu-end p-4 rounded-xxl border-0 shadow-lg"
                                                 aria-labelledby="dropdownMenu31">
-                                                <h4 className="fw-700 font-xss text-grey-900 d-flex align-items-center">Share <i
+                                                <h4 className="fw-700 font-xss text-grey-900 d-flex align-items-center">
+                                                    Share <i
                                                     className="feather-x ms-auto font-xssss btn-round-xs bg-greylight text-grey-900 me-2"></i>
                                                 </h4>
                                                 <div className="card-body p-0 d-flex">
                                                     <ul className="d-flex align-items-center justify-content-between mt-2">
                                                         <li className="me-1">
                                                             <Link
-                                                                to={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareData ? shareData.link : `https://social.techxdeveloper.com/${post.id}`)}`}
+                                                                to={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareData?.shareableLink || `${post.id}`)}`}
                                                                 className="btn-round-lg bg-facebook"
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
-                                                                onClick={() => handleShare(post.id)} // Pass post.id here
+                                                                onClick={() => handleShare(post.id)}
                                                             >
                                                                 <i className="font-xs ti-facebook text-white"></i>
                                                             </Link>
                                                         </li>
                                                         <li className="me-1">
                                                             <Link
-                                                                to={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareData ? shareData.link : `https://social.techxdeveloper.com/${post.id}`)}&text=Check out this post!`}
+                                                                to={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareData?.shareableLink || `${post.id}`)}&text=Check out this post!`}
                                                                 className="btn-round-lg bg-twitter"
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
-                                                                onClick={() => handleShare(post.id)} // Pass post.id here
+                                                                onClick={() => handleShare(post.id)}
                                                             >
                                                                 <i className="font-xs ti-twitter-alt text-white"></i>
                                                             </Link>
                                                         </li>
                                                         <li className="me-1">
                                                             <Link
-                                                                to={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareData ? shareData.link : `https://social.techxdeveloper.com/${post.id}`)}`}
+                                                                to={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareData?.shareableLink || `https://social.techxdeveloper.com/posts/${post.id}`)}`}
                                                                 className="btn-round-lg bg-linkedin"
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
-                                                                onClick={() => handleShare(post.id)} // Pass post.id here
+                                                                onClick={() => handleShare(post.id)}
                                                             >
                                                                 <i className="font-xs ti-linkedin text-white"></i>
                                                             </Link>
@@ -908,11 +1072,12 @@ const UserProfile = ({userId }) => {
                                                     Link</h4>
                                                 <i
                                                     className="feather-copy position-absolute right-35 mt-3 font-xs text-grey-500"
-                                                    onClick={(event) => handleCopyLink(event, shareData ? shareData.link : `https://social.techxdeveloper.com/${post.id}`)} // Call handleCopyLink on icon click
+                                                    onClick={(event) => handleCopyLink(event, shareData?.shareableLink || `https://social.techxdeveloper.com/${post.id}`)}
                                                 ></i>
+
                                                 <input
                                                     type="text"
-                                                    value={shareData ? shareData.link : `https://social.techxdeveloper.com/${post.id}`}
+                                                    value={shareData?.shareableLink || `https://social.techxdeveloper.com/${post.id}`}
                                                     className="bg-grey text-grey-500 font-xssss border-0 lh-32 p-2 font-xssss fw-600 rounded-3 w-100 theme-dark-bg"
                                                     readOnly
                                                 />
@@ -936,32 +1101,38 @@ const UserProfile = ({userId }) => {
                                                 ) : (
                                                     <>
                                                         {comments.length > 0 ? (
-                                                            <div className="comments-list">
-                                                                {comments.map((comment, index) => (
-                                                                    <div key={index}
-                                                                         className="d-flex align-items-start mb-3">
-                                                                        <figure className="avatar me-3">
-                                                                            <img
-                                                                                src={comment.user_image || '/images/profile-2.png'}
-                                                                                alt="user"
-                                                                                className="rounded-circle w30"
-                                                                            />
-                                                                        </figure>
-                                                                        <div className="comment-content">
-                                                                            <h5 className="fw-600 text-grey-900 font-xssss mb-1">{comment.username}</h5>
-                                                                            <p className="fw-400 text-grey-500 lh-24 font-xss m-0 text-dark">{comment.content}</p>
-                                                                        </div>
+                                                            comments.map((userComment, id) => (
+                                                                <div key={id} className="d-flex align-items-start mb-3">
+                                                                    <figure className="avatar me-3">
+                                                                        <img
+                                                                            src={userComment.user_image || '/images/profile-2.png'}
+                                                                            alt="user"
+                                                                            className="rounded-circle w30"
+                                                                        />
+                                                                    </figure>
+                                                                    <div className="comment-content">
+                                                                        <h5 className="fw-600 text-grey-900 font-xssss mb-1">
+                                                                            {userComment.username || "Unknown User"}
+                                                                            <span className="d-none-xss">
+                                        {formatTimeAgo(userComment.createdAt)}
+                                    </span>
+                                                                        </h5>
+                                                                        <p className="fw-400 text-grey-500 lh-24 font-xss m-0 text-dark">
+                                                                            {typeof userComment.comment === 'string' ? userComment.comment : 'Invalid comment'}
+                                                                        </p>
                                                                     </div>
-                                                                ))}
-                                                            </div>
+                                                                </div>
+                                                            ))
                                                         ) : (
-                                                            <p>No comments yet. Be the first to comment!</p>
+                                                            <p>No comments yet.</p>
                                                         )}
                                                     </>
                                                 )}
 
-                                                <form className="comment-form d-flex mt-2"
-                                                      onSubmit={(e) => handleAddComment(e, post.id)}>
+                                                {/* Show loader while adding a comment */}
+                                                {loadingAddComment && <p>Adding a comment...</p>}
+
+                                                <form className="comment-form d-flex mt-2" onSubmit={(e) => handleAddComment(e, post.id)}>
                                                     <input
                                                         type="text"
                                                         className="form-control h75 rounded-xxl p-3"
@@ -969,19 +1140,18 @@ const UserProfile = ({userId }) => {
                                                         value={newComment}
                                                         onChange={(e) => setNewComment(e.target.value)}
                                                     />
-                                                    <button type="submit" className="btn btn-primary ms-2">
+                                                    <button type="submit" className={`btn ms-2 border-0 ${newComment ? 'btn-primary' : ''}`} disabled={!newComment}>
                                                         <i className="feather-send"></i>
                                                     </button>
                                                 </form>
-
                                             </div>
                                         )}
                                     </div>
                                 ))}
                             </>
-
                         </div>
                     </div>
+                    )}
                 </div>
             </div>
         </div>
