@@ -1,9 +1,9 @@
 import React from 'react';
 import {useState, useEffect} from "react";
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {AuthContext} from '../Context/Authcontext'
 import Spinner from 'react-bootstrap/Spinner';
-import {deletePost, sharePosts} from "../Services/api";
+import {deletePost, fetchUserData, sharePosts} from "../Services/api";
 import moment from "moment";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
@@ -21,52 +21,29 @@ import {
     deleteFriend,
     likePost,
 } from "../Services/api";
-import { Modal } from 'react-bootstrap'; // Import Bootstrap Modal
 
-
+import { Carousel, Modal } from 'react-bootstrap';
 export const DefaultPage = ({post}) => {
-    const totalSlides = 9; // Total number of slides (including the "Add Story" slide)
     const visibleSlides = 4; // Number of slides to show at once
-    const [files, setFiles] = useState([]); // State to store uploaded files
-    const [showModal, setShowModal] = useState(false); // State to control modal visibility
+
     const [showFullContent, setShowFullContent] = useState(false); // State for managing full content visibility
     const [expandedPosts, setExpandedPosts] = useState({}); // State to track expanded posts
-
+    const navigate = useNavigate();
     const toggleExpandPost = (postId) => {
         setExpandedPosts((prev) => ({
             ...prev,
             [postId]: !prev[postId], // Toggle the visibility of the specific post
         }));
     };
-    const handleFileUpload = (event) => {
-        const uploadedFiles = Array.from(event.target.files);
-        setFiles(uploadedFiles); // Update state with selected files
-        event.target.value = ""; // Clear the input value for future uploads
-        setShowModal(true); // Open the modal
-    };
 
-    const createStory = () => {
-        if (files.length > 0) {
-            // Handle the logic for creating a story with the uploaded files
-            console.log("Creating story with files:", files);
 
-            // Here you can add your API call to upload the files and create the story
-            // Example: await uploadFiles(files);
-
-            // Clear the files after creating the story
-            setFiles([]);
-            alert("Story created successfully!");
-        } else {
-            alert("Please select at least one file to create a story.");
-        }
-    };
 
     const [mainContentLoading, setMainContentLoading] = useState(true); //main conntent lodadin state
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedImages, setSelectedImages] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-    const [loadingCommentsByPost, setLoadingCommentsByPost] = useState({});
+
     const [commentsByPost, setCommentsByPost] = useState({});
 
 
@@ -88,25 +65,16 @@ export const DefaultPage = ({post}) => {
     const [shareData, setShareData] = useState(null); //state share post
     const [shareError, setShareError] = useState(null); // state share error
     const [copySuccess, setCopySuccess] = useState(false); // State for copy success message
-    const [error, setError] = useState(null);
+    const [error, setError] = useState(null)
 
-    // comment state
-
-
+//const fetch profile
 
 
-    //get post state
-    const [getPost, setGetPost] = useState([]);
-    const [loading, setLoading] = useState(true);
 
 
-    // Handle reaction click
-    /* const handleReactionClick = (postId) => {
-         // Toggle the emoji wrap for the clicked post
-         setIsReactionActive((prevActivePost) => (prevActivePost === postId ? null : postId));
-     };*/
-    // State for managing the Create Post form visibility and data
-// State for managing the Create Post form visibility and data
+
+
+    // create psot state
     const [createPost, setCreatePost] = useState({
         content: '',
         media: [],
@@ -188,6 +156,37 @@ export const DefaultPage = ({post}) => {
         });
     };
 
+    const [userData, setuserData] = useState({
+        image:'',
+
+    })
+
+
+
+        useEffect(() => {
+            const getUserData = async () => {
+                try {
+                    const data = await fetchUserData();
+                    console.log('fetch user data in home');
+
+                    if (data && data.user) {
+                        localStorage.setItem('user_id', data.user.id); // Assuming `id` is the field for user ID
+
+                        setuserData({
+                            image: data.user.image
+                        });
+                    }
+                } catch (error) {
+                    console.error("failed to fetch user image", error);
+                }
+            }
+
+            getUserData();
+        }, []);
+
+//get post state
+    const [getPost, setGetPost] = useState([]);
+    const [loading, setLoading] = useState(true);
 
 //getinging Posts
     useEffect(() => {
@@ -546,7 +545,94 @@ export const DefaultPage = ({post}) => {
             return `${diffInDays} day${diffInDays === 1 ? '' : 's'} ago`;
         }
     };
+    const handleNavigateToPost = (post_id) => {
+        navigate(`/single-post/${post_id}`);
+    };
 
+
+    const [store, setStories] = useState([]);
+    const [totalSlides, setTotalSlides] = useState(0); // Initialize with 0 or any starting value
+
+    // Load stories from local storage on mount
+    const [files, setFiles] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedStory, setSelectedStory] = useState(null);
+    // Load stories from local storage on mount
+    useEffect(() => {
+        const savedStories = JSON.parse(localStorage.getItem('stories')) || [];
+        setStories(savedStories);
+        setTotalSlides(savedStories.length + 1); // +1 for the 'Add Story' slide
+    }, []);
+
+    // Handle file upload
+    const handleFileUpload = (e) => {
+        setFiles([...e.target.files]);
+        setShowModal(true); // Open the preview modal
+    };
+    // Save story to local storage
+    // Save story to local storage
+    const createStory = () => {
+        const newStories = files.map((file, index) => ({
+            id: stories.length + index + 1,
+            url: URL.createObjectURL(file),
+            type: file.type.startsWith('video/') ? 'video' : 'image',
+            user: `User ${stories.length + index + 1}`, // Example username
+        }));
+
+        const updatedStories = [...stories, ...newStories];
+        setStories(updatedStories);
+        localStorage.setItem('stories', JSON.stringify(updatedStories));
+        setTotalSlides(updatedStories.length + 1); // Update total slides
+        setShowModal(false);
+        setFiles([]); // Clear file input
+    };
+    // Sample story data
+    const stories = [
+        { id: 1, title: 'Victor Exrixon', image: 'images/s-1.jpg', userImage: 'images/user-11.png' },
+        { id: 2, title: 'Surfiya Zakir', image: 'images/s-2.jpg', userImage: 'images/user-12.png' },
+        { id: 3, title: 'Goria Coast', video: 'images/s-4.mp4', userImage: 'images/user-9.png' },
+        { id: 4, title: 'amber', image: 'images/s-5.jpg' , userImage: 'images/user-6.png' },
+
+        { id: 5, title: 'moeez', image: 'images/s-6.jpg', userImage: 'images/user-8.png' },
+        { id: 6, title: 'merab', image: 'images/s-7.jpg', userImage: 'images/user-8.png' },
+        { id: 7, title: 'maria', image: 'images/s-8.jpg', userImage: 'images/user-8.png' },
+        { id: 8, title: 'ariba', image: 'images/s-9.jpg', userImage: 'images/user-8.png' },
+
+        // Add other stories as needed
+    ];
+
+
+
+    const handleStoryClick = (story) => {
+        setSelectedStory(story);
+    };
+    const handleNextStory = () => {
+        if (!selectedStory) return; // Safeguard against null
+        const currentIndex = stories.findIndex(story => story.id === selectedStory.id);
+        const nextIndex = (currentIndex + 1) % stories.length; // Loop back to the start
+        setSelectedStory(stories[nextIndex]);
+    };
+
+    const handlePrevStory = () => {
+        if (!selectedStory) return; // Safeguard against null
+        const currentIndex = stories.findIndex(story => story.id === selectedStory.id);
+        const prevIndex = (currentIndex - 1 + stories.length) % stories.length; // Loop back to the end
+        setSelectedStory(stories[prevIndex]);
+    };
+
+    useEffect(() => {
+        if (!selectedStory) return; // Safeguard to avoid starting timer when no story is selected
+
+        // Automatically move to the next story after 10 seconds (10000 milliseconds)
+        const timer = setTimeout(() => {
+            handleNextStory();
+        }, 10000);
+
+        // Clear the timer when the modal is closed or unmounted
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [selectedStory]); // Removed handleNextStory from dependencies since it's defined in the same scope
 
 
     return (
@@ -590,124 +676,172 @@ export const DefaultPage = ({post}) => {
                             <div className="row">
                                 <div className="col-xl-8 col-xxl-9 col-lg-8">
 
-                                    <div
-                                        className="card w-100 shadow-none bg-transparent bg-transparent-card border-0 p-0 mb-0 d-flex">
+                                    <div className="card w-100 shadow-none bg-transparent border-0 p-0 mb-0 d-flex">
                                         <div className="d-flex justify-content-center overflow-hidden">
-                                            <Swiper
-                                                spaceBetween={10}
-                                                slidesPerView={visibleSlides} // Show 4 slides at a time
-                                                loop={false} // Set loop to false
-                                                autoplay={{delay: 2500, disableOnInteraction: false}}
-                                                onReachEnd={() => {
-                                                    // Stop at the last slide
-                                                    if (totalSlides > visibleSlides) {
-                                                        setTimeout(() => {
-                                                            // After reaching the end, stop scrolling
-                                                            const swiper = document.querySelector('.swiper-container').swiper;
-                                                            swiper.slideTo(totalSlides - 1); // Navigate to the last slide
-                                                        }, 2500); // Timeout to let it reach the last slide
-                                                    }
-                                                }}
-                                                className="swiper-container d-flex"
-                                            >
-                                                {/* Add Story Slide */}
-                                                <SwiperSlide
-                                                    className="swiper-slide d-flex align-items-center justify-content-center">
-                                                    <div className="item d-flex flex-column align-items-center">
-                                                        <div
-                                                            className="card w125 h200 d-block border-0 shadow-none rounded-xxxl bg-dark overflow-hidden mb-3 mt-3"
-                                                            onClick={() => document.getElementById('fileInput').click()} // Trigger file input click
-                                                        >
-                                                            <div
-                                                                className="card-body d-block p-3 w-100 position-absolute bottom-0 text-center">
-                                    <span className="btn-round-lg bg-white">
-                                        <i className="feather-plus font-lg"></i>
-                                    </span>
-                                                                <div className="clearfix"></div>
-                                                                <h4 className="fw-700 position-relative z-index-1 ls-1 font-xssss text-white mt-2 mb-1">
-                                                                    Add Story
-                                                                </h4>
-                                                            </div>
-                                                        </div>
-                                                        <input
-                                                            type="file"
-                                                            id="fileInput"
-                                                            style={{display: "none"}} // Hide the input
-                                                            accept="image/*,video/*" // Allow images and videos
-                                                            multiple // Allow multiple file uploads
-                                                            onChange={handleFileUpload}
-                                                        />
-                                                    </div>
-                                                </SwiperSlide>
-
-                                                {/* Example Story Slides */}
-                                                {[...Array(totalSlides - 1)].map((_, index) => (
-                                                    <SwiperSlide key={index}
-                                                                 className="swiper-slide d-flex align-items-center justify-content-center">
+                                            <Carousel className="w-100" interval={null} controls={true} wrap={false}>
+                                                {/* First Slide: Add Story Slide */}
+                                                <Carousel.Item>
+                                                    <div className="d-flex justify-content-between">
                                                         <div className="item d-flex flex-column align-items-center">
-                                                            <div
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#Modalstory"
-                                                                className="card w125 h200 d-block border-0 shadow-xss rounded-xxxl bg-primary-bottom overflow-hidden cursor-pointer mb-3 mt-3"
-                                                                style={{backgroundImage: `url(images/s-1${index + 2}.jpg)`}} // Example images
-                                                            >
+                                                            <input type="file" multiple onChange={handleFileUpload}
+                                                                   style={{display: 'none'}} id="fileUpload"/>
+                                                            <label htmlFor="fileUpload"
+                                                                   className="card w125 h200 d-block border-0 shadow-none rounded-xxxl bg-dark overflow-hidden mb-3 mt-3">
                                                                 <div
                                                                     className="card-body d-block p-3 w-100 position-absolute bottom-0 text-center">
-                                                                    <a href="#">
-                                                                        <figure
-                                                                            className="avatar ms-auto me-auto mb-0 position-relative w50 z-index-1">
-                                                                            <img src={`images/user-${index + 1}.png`}
-                                                                                 alt="image"
-                                                                                 className="float-right p-0 bg-white rounded-circle w-100 shadow-xss"/>
-                                                                        </figure>
-                                                                        <div className="clearfix"></div>
-                                                                        <h4 className="fw-600 position-relative z-index-1 ls-1 font-xssss text-white mt-2 mb-1">User {index + 1}</h4>
-                                                                    </a>
+                                        <span className="btn-round-lg bg-white">
+                                            <i className="feather-plus font-lg"></i>
+                                        </span>
+                                                                    <div className="clearfix"></div>
+                                                                    <h4 className="fw-700 position-relative z-index-1 ls-1 font-xssss text-white mt-2 mb-1">Add
+                                                                        Story</h4>
+                                                                </div>
+                                                            </label>
+                                                        </div>
+                                                        {/* Story Slides */}
+                                                        {stories.slice(0, 4).map((story) => (
+                                                            <div className="item d-flex flex-column align-items-center"
+                                                                 key={story.id}>
+                                                                <div onClick={() => handleStoryClick(story)}
+                                                                     className={`card w125 h200 d-block border-0 shadow-xss rounded-xxxl bg-primary-bottom overflow-hidden cursor-pointer mb-3 mt-3`}
+                                                                     style={story.video ? {} : {backgroundImage: `url(${story.image})`}}>
+                                                                    {story.video && (
+                                                                        <video autoPlay loop
+                                                                               className="float-right w-100">
+                                                                            <source src={story.video} type="video/mp4"/>
+                                                                        </video>
+                                                                    )}
+                                                                    <div
+                                                                        className="card-body d-block p-3 w-100 position-absolute bottom-0 text-center">
+                                                                        <Link to="#"
+                                                                              onClick={() => handleStoryClick(story)}>
+                                                                            <figure
+                                                                                className="avatar ms-auto me-auto mb-0 position-relative w50 z-index-1">
+                                                                                <img src={story.userImage} alt="image"
+                                                                                     className="float-right p-0 bg-white rounded-circle w-100 shadow-xss"/>
+                                                                            </figure>
+                                                                            <div className="clearfix"></div>
+                                                                            <h4 className="fw-600 position-relative z-index-1 ls-1 font-xssss text-white mt-2 mb-1">{story.title}</h4>
+                                                                        </Link>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </SwiperSlide>
-                                                ))}
-                                            </Swiper>
-                                        </div>
-
-                                        {/* Modal for File Preview */}
-                                        <Modal show={showModal} onHide={() => setShowModal(false)}>
-                                            <Modal.Header closeButton>
-                                                <Modal.Title>Confirm Your Story</Modal.Title>
-                                            </Modal.Header>
-                                            <Modal.Body>
-                                                <h5>Selected Files:</h5>
-                                                {files.map((file, index) => (
-                                                    <div key={index}>
-                                                        {file.type.startsWith('video/') ? (
-                                                            <video controls className="uploaded-media w-100 mb-2">
-                                                                <source src={URL.createObjectURL(file)}
-                                                                        type={file.type}/>
-                                                                Your browser does not support the video tag.
-                                                            </video>
-                                                        ) : (
-                                                            <img src={URL.createObjectURL(file)}
-                                                                 alt={`uploaded-${index}`}
-                                                                 className="uploaded-media w-100 mb-2"/>
-                                                        )}
+                                                        ))}
                                                     </div>
-                                                ))}
-                                            </Modal.Body>
-                                            <Modal.Footer>
-                                                <button className="btn btn-secondary"
-                                                        onClick={() => setShowModal(false)}>
-                                                    Cancel
-                                                </button>
-                                                <button className="btn btn-primary" onClick={createStory}>
-                                                    Create Story
-                                                </button>
-                                            </Modal.Footer>
-                                        </Modal>
+                                                </Carousel.Item>
+
+                                                {/* Second Slide: Add More Stories */}
+                                                <Carousel.Item>
+                                                    <div className="d-flex justify-content-between">
+                                                        {stories.slice(4).map((story) => (
+                                                            <div className="item d-flex flex-column align-items-center"
+                                                                 key={story.id}>
+                                                                <div onClick={() => handleStoryClick(story)}
+                                                                     className={`card w125 h200 d-block border-0 shadow-xss rounded-xxxl bg-primary-bottom overflow-hidden cursor-pointer mb-3 mt-3`}
+                                                                     style={story.video ? {} : {backgroundImage: `url(${story.image})`}}>
+                                                                    {story.video && (
+                                                                        <video autoPlay loop
+                                                                               className="float-right w-100">
+                                                                            <source src={story.video} type="video/mp4"/>
+                                                                        </video>
+                                                                    )}
+                                                                    <div
+                                                                        className="card-body d-block p-3 w-100 position-absolute bottom-0 text-center">
+                                                                        <Link to="#"
+                                                                              onClick={() => handleStoryClick(story)}>
+                                                                            <figure
+                                                                                className="avatar ms-auto me-auto mb-0 position-relative w50 z-index-1">
+                                                                                <img src={story.userImage} alt="image"
+                                                                                     className="float-right p-0 bg-white rounded-circle w-100 shadow-xss"/>
+                                                                            </figure>
+                                                                            <div className="clearfix"></div>
+                                                                            <h4 className="fw-600 position-relative z-index-1 ls-1 font-xssss text-white mt-2 mb-1">{story.title}</h4>
+                                                                        </Link>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </Carousel.Item>
+                                            </Carousel>
+
+                                            {/* Modal to Display Story */}
+                                            {selectedStory && (
+                                                <div className="modal fade show" id="Modalstory" tabIndex="-1" role="dialog" style={{display: 'block'}}>
+                                                    <div className="modal-dialog" role="document">
+                                                        <div className="modal-content">
+                                                            <div className="modal-header">
+                                                                <h5 className="modal-title">{selectedStory.title}</h5>
+                                                                <button type="button" className="btn-close" onClick={() => setSelectedStory(null)} aria-label="Close">
+                                                                    <span>&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div className="modal-body">
+                                                                {selectedStory.video ? (
+                                                                    <video controls className="w-100">
+                                                                        <source src={selectedStory.video} type="video/mp4" />
+                                                                    </video>
+                                                                ) : (
+                                                                    <img src={selectedStory.image} alt={selectedStory.title} className="w-100" />
+                                                                )}
+                                                            </div>
+                                                            {/* Centered Navigation Icons */}
+                                                            <div className="carousel-controls d-flex justify-content-between align-items-center w-100 position-absolute" style={{ top: '50%', transform: 'translateY(-50%)' }}>
+                                                                <a className="carousel-control-prev text-dark" href="#Modalstory" role="button" onClick={handlePrevStory}>
+                                                                    <span className="carousel-control-prev-icon" aria-hidden="true" style={{ fontSize: '30px' }}></span>
+                                                                    <span className="sr-only">Previous</span>
+                                                                </a>
+                                                                <a className="carousel-control-next text-dark" href="#Modalstory" role="button" onClick={handleNextStory}>
+                                                                    <span className="carousel-control-next-icon" aria-hidden="true" style={{ fontSize: '30px' }}></span>
+                                                                    <span className="sr-only">Next</span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+
+
+                                            {/* Modal for File Preview */}
+                                            <Modal show={showModal} onHide={() => setShowModal(false)}>
+                                                <Modal.Header closeButton>
+                                                    <Modal.Title>Confirm Your Story</Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>
+                                                    <h5>Selected Files:</h5>
+                                                    {files.map((file, index) => (
+                                                        <div key={index}>
+                                                            {file.type.startsWith("video/") ? (
+                                                                <video controls className="uploaded-media w-100 mb-2">
+                                                                    <source src={URL.createObjectURL(file)}
+                                                                            type={file.type}/>
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                            ) : (
+                                                                <img src={URL.createObjectURL(file)}
+                                                                     alt={`uploaded-${index}`}
+                                                                     className="uploaded-media w-100 mb-2"/>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </Modal.Body>
+                                                <Modal.Footer>
+                                                    <button className="btn btn-secondary"
+                                                            onClick={() => setShowModal(false)}>
+                                                        Cancel
+                                                    </button>
+                                                    <button className="btn btn-primary" onClick={createStory}>
+                                                        Create Story
+                                                    </button>
+                                                </Modal.Footer>
+                                            </Modal>
+                                        </div>
                                     </div>
+
                                     <div
                                         className="card w-100 shadow-xss rounded-xxl border-0 ps-4 pt-4 pe-4 pb-3 mb-3">
                                         <div className="card-body p-0">
+
                                             {/* Create Post Button */}
                                             <button
                                                 className="font-xssss fw-600 card-body p-0 d-flex align-items-center"
@@ -740,7 +874,7 @@ export const DefaultPage = ({post}) => {
                                         <form onSubmit={postHandleCreate}
                                               className="card-body p-0 mt-3 position-relative">
                                             <figure className="avatar position-absolute ms-2 mt-1 top-5">
-                                                <img src="/images/user-8.png" alt="user"
+                                                <img src={userData.image || '/images/profile-2.png'} alt="user"
                                                      className="shadow-sm rounded-circle w30"/>
                                             </figure>
 
@@ -776,81 +910,6 @@ export const DefaultPage = ({post}) => {
 
 
                                             {/* Display selected images and videos */}
-                                            {Array.isArray(createPost.media_link) && createPost.media_link.length > 0 && (
-                                                <div className="media-preview mt-3">
-                                                    <div
-                                                        className="image-grid"
-                                                        style={{
-                                                            display: 'grid',
-                                                            gridTemplateColumns: createPost.media_link.length === 2 ? 'repeat(2, 1fr)' :
-                                                                createPost.media_link.length === 3 ? 'repeat(3, 1fr)' :
-                                                                    createPost.media_link.length === 4 ? 'repeat(2, 1fr)' :
-                                                                        'repeat(3, 1fr)',
-                                                            gap: '10px',
-                                                        }}
-                                                    >
-                                                        {createPost.media_link.slice(0, 5).map((file, index) => (
-                                                            <div key={index} className="media-item position-relative">
-                                                                {file.type.startsWith('image') ? (
-                                                                    <img
-                                                                        src={URL.createObjectURL(file)}
-                                                                        alt="preview"
-                                                                        className="w-100 rounded-xxl"
-                                                                        style={{
-                                                                            height: '150px',
-                                                                            objectFit: 'cover'
-                                                                        }} // Adjust height for consistent size
-                                                                    />
-                                                                ) : (
-                                                                    <video
-                                                                        src={URL.createObjectURL(file)}
-                                                                        controls
-                                                                        className="w-100 rounded-xxl"
-                                                                        style={{height: '150px', objectFit: 'cover'}}
-                                                                    ></video>
-                                                                )}
-
-                                                                {/* Close button for removing media */}
-                                                                <button
-                                                                    className="close-icon"
-                                                                    onClick={() => handleRemoveMedia(index)}
-                                                                    style={{
-                                                                        position: 'absolute',
-                                                                        top: '5px',
-                                                                        right: '5px',
-                                                                        background: 'none',
-                                                                        border: 'none',
-                                                                        cursor: 'pointer',
-                                                                    }}
-                                                                >
-                                                                    <div
-                                                                        className="bg-primary rounded-circle d-flex justify-content-center align-items-center"
-                                                                        style={{width: '30px', height: '30px'}}
-                                                                    >
-                                                                        <i className="feather-x text-white"></i>
-                                                                    </div>
-                                                                </button>
-
-                                                                {/* Display indicator if there are more than 5 images */}
-                                                                {index === 4 && createPost.media_link.length > 5 && (
-                                                                    <div
-                                                                        className="more-indicator position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
-                                                                        style={{
-                                                                            background: 'rgba(0, 0, 0, 0.5)',
-                                                                            top: 0,
-                                                                            left: 0,
-                                                                            color: 'white',
-                                                                            fontSize: '24px',
-                                                                        }}
-                                                                    >
-                                                                        +{createPost.media_link.length - 5}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )}
 
 
                                         </form>
@@ -970,8 +1029,8 @@ export const DefaultPage = ({post}) => {
 
                                                 <div className="card-body p-0 me-lg-5">
                                                     <p className="fw-500 text-grey-500 lh-26 font-xssss w-100 mb-2">
-                                                        {expandedPosts[post.id] || post.content.split(' ').length <= 20 ? (
-                                                            post.content // Show full content if expanded or content is 20 words or less
+                                                        {post.content.split(' ').length <= 20 ? (
+                                                            post.content
                                                         ) : (
                                                             <>
                                                                 {post.content.split(' ').slice(0, 20).join(' ')}...
@@ -980,7 +1039,7 @@ export const DefaultPage = ({post}) => {
                                                                     className="fw-600 text-primary ms-2"
                                                                     onClick={(e) => {
                                                                         e.preventDefault();
-                                                                        toggleExpandPost(post.id); // Set state to show full content
+                                                                        handleNavigateToPost(post.id); // Navigate to the single post page
                                                                     }}
                                                                 >
                                                                     See more
@@ -1002,12 +1061,22 @@ export const DefaultPage = ({post}) => {
                                                                 {(!post.gallery_images || post.gallery_images.length === 0) && (
                                                                     <div className="col-12">
                                                                         {post.post_type === "image" && (
-                                                                            <img src={post.media_link} alt="Post media"
-                                                                                 className="w-100 mb-2"/>
+                                                                            <img
+                                                                                src={post.media_link}
+                                                                                alt="Post media"
+                                                                                className="w-100 mb-2"
+                                                                                onClick={() => handleNavigateToPost(post.id)} // Navigate on image click
+                                                                            />
                                                                         )}
                                                                         {post.post_type === "video" && (
-                                                                            <video autoPlay loop className="w-100"
-                                                                                   controls muted>
+                                                                            <video
+                                                                                autoPlay
+                                                                                loop
+                                                                                className="w-100"
+                                                                                controls
+                                                                                muted
+                                                                                onClick={() => handleNavigateToPost(post.id)} // Navigate on video click
+                                                                            >
                                                                                 <source src={post.media_link}
                                                                                         type="video/mp4"/>
                                                                                 Your browser does not support the video
@@ -1017,161 +1086,19 @@ export const DefaultPage = ({post}) => {
                                                                     </div>
                                                                 )}
 
-                                                                {/* Two images: media_link + 1 gallery image side by side */}
-                                                                {post.gallery_images && post.gallery_images.length === 2 && (
+                                                                {/* Handling other cases like gallery images */}
+                                                                {post.gallery_images && post.gallery_images.length > 0 && (
                                                                     <>
-                                                                        <div className="col-6">
-                                                                            {post.post_type === "image" && (
-                                                                                <img src={post.media_link}
-                                                                                     alt="Post media"
-                                                                                     className="w-100 mb-2"/>
-                                                                            )}
-                                                                            {post.post_type === "video" && (
-                                                                                <video autoPlay loop className="w-100"
-                                                                                       controls muted>
-                                                                                    <source src={post.media_link}
-                                                                                            type="video/mp4"/>
-                                                                                    Your browser does not support the
-                                                                                    video tag.
-                                                                                </video>
-                                                                            )}
-                                                                        </div>
-                                                                        <div className="col-6">
-                                                                            <img src={post.gallery_images[0]}
-                                                                                 alt="Gallery image 1"
-                                                                                 className="w-100 mb-2"/>
-                                                                        </div>
-                                                                    </>
-                                                                )}
-
-                                                                {/* Three images: media_link + 2 gallery images in a row */}
-                                                                {post.gallery_images && post.gallery_images.length === 2 && (
-                                                                    <>
-                                                                        <div className="col-4">
-                                                                            {post.post_type === "image" && (
-                                                                                <img src={post.media_link}
-                                                                                     alt="Post media"
-                                                                                     className="w-100 mb-2"/>
-                                                                            )}
-                                                                            {post.post_type === "video" && (
-                                                                                <video autoPlay loop className="w-100"
-                                                                                       controls muted>
-                                                                                    <source src={post.media_link}
-                                                                                            type="video/mp4"/>
-                                                                                    Your browser does not support the
-                                                                                    video tag.
-                                                                                </video>
-                                                                            )}
-                                                                        </div>
                                                                         {post.gallery_images.map((image, idx) => (
                                                                             <div key={idx} className="col-4">
-                                                                                <img src={image}
-                                                                                     alt={`Gallery image ${idx + 1}`}
-                                                                                     className="w-100 mb-2"/>
+                                                                                <img
+                                                                                    src={image}
+                                                                                    alt={`Gallery image ${idx + 1}`}
+                                                                                    className="w-100 mb-2"
+                                                                                    onClick={() => handleNavigateToPost(post.id)} // Navigate on gallery image click
+                                                                                />
                                                                             </div>
                                                                         ))}
-                                                                    </>
-                                                                )}
-
-                                                                {/* Four images: media_link in first row, 2 gallery images in second row */}
-                                                                {post.gallery_images && post.gallery_images.length === 3 && (
-                                                                    <>
-                                                                        <div className="col-6">
-                                                                            {post.post_type === "image" && (
-                                                                                <img src={post.media_link}
-                                                                                     alt="Post media"
-                                                                                     className="w-100 mb-2"/>
-                                                                            )}
-                                                                            {post.post_type === "video" && (
-                                                                                <video autoPlay loop className="w-100"
-                                                                                       controls muted>
-                                                                                    <source src={post.media_link}
-                                                                                            type="video/mp4"/>
-                                                                                    Your browser does not support the
-                                                                                    video tag.
-                                                                                </video>
-                                                                            )}
-                                                                        </div>
-                                                                        {post.gallery_images.map((image, idx) => (
-                                                                            <div key={idx} className="col-6">
-                                                                                <img src={image}
-                                                                                     alt={`Gallery image ${idx + 1}`}
-                                                                                     className="w-100 mb-2"/>
-                                                                            </div>
-                                                                        ))}
-                                                                    </>
-                                                                )}
-
-                                                                {/* Five images: media_link + 2 gallery images in first row, 2 gallery images in second row */}
-                                                                {post.gallery_images && post.gallery_images.length === 4 && (
-                                                                    <>
-                                                                        <div className="col-4">
-                                                                            {post.post_type === "image" && (
-                                                                                <img src={post.media_link}
-                                                                                     alt="Post media"
-                                                                                     className="w-100 mb-2"/>
-                                                                            )}
-                                                                            {post.post_type === "video" && (
-                                                                                <video autoPlay loop className="w-100"
-                                                                                       controls muted>
-                                                                                    <source src={post.media_link}
-                                                                                            type="video/mp4"/>
-                                                                                    Your browser does not support the
-                                                                                    video tag.
-                                                                                </video>
-                                                                            )}
-                                                                        </div>
-                                                                        {post.gallery_images.slice(0, 3).map((image, idx) => (
-                                                                            <div key={idx} className="col-4">
-                                                                                <img src={image}
-                                                                                     alt={`Gallery image ${idx + 1}`}
-                                                                                     className="w-100 mb-2"/>
-                                                                            </div>
-                                                                        ))}
-                                                                    </>
-                                                                )}
-
-                                                                {/* More than five images: media_link + first 2 gallery images in first row, 2 gallery images in second row, indicator for more */}
-                                                                {post.gallery_images && post.gallery_images.length > 4 && (
-                                                                    <>
-                                                                        <div className="col-4">
-                                                                            {post.post_type === "image" && (
-                                                                                <img src={post.media_link}
-                                                                                     alt="Post media"
-                                                                                     className="w-100 mb-2"/>
-                                                                            )}
-                                                                            {post.post_type === "video" && (
-                                                                                <video autoPlay loop className="w-100"
-                                                                                       controls muted>
-                                                                                    <source src={post.media_link}
-                                                                                            type="video/mp4"/>
-                                                                                    Your browser does not support the
-                                                                                    video tag.
-                                                                                </video>
-                                                                            )}
-                                                                        </div>
-                                                                        {post.gallery_images.slice(0, 2).map((image, idx) => (
-                                                                            <div key={idx} className="col-4">
-                                                                                <img src={image}
-                                                                                     alt={`Gallery image ${idx + 1}`}
-                                                                                     className="w-100 mb-2"/>
-                                                                            </div>
-                                                                        ))}
-                                                                        <div className="col-6">
-                                                                            <img src={post.gallery_images[2]}
-                                                                                 alt="Gallery image 3"
-                                                                                 className="w-100 mb-2"/>
-                                                                        </div>
-                                                                        <div
-                                                                            className="col-6 position-relative text-center">
-                                                                            <img src={post.gallery_images[3]}
-                                                                                 alt="Gallery image 4"
-                                                                                 className="w-100 mb-2"/>
-                                                                            <div className="plus-indicator-overlay">
-                                                                                <span
-                                                                                    className="plus-indicator">+{post.gallery_images.length - 4}</span>
-                                                                            </div>
-                                                                        </div>
                                                                     </>
                                                                 )}
                                                             </>
@@ -1202,45 +1129,46 @@ export const DefaultPage = ({post}) => {
                                                     </Link>
                                                     <div
                                                         className="dropdown-menu dropdown-menu-end p-4 rounded-xxl border-0 shadow-lg"
-                                                        aria-labelledby="dropdownMenu31">
+                                                        aria-labelledby="dropdownMenu31"
+                                                    >
                                                         <h4 className="fw-700 font-xss text-grey-900 d-flex align-items-center">
-                                                            Share <i
-                                                            className="feather-x ms-auto font-xssss btn-round-xs bg-greylight text-grey-900 me-2"></i>
+                                                            Share
+                                                            <i className="feather-x ms-auto font-xssss btn-round-xs bg-greylight text-grey-900 me-2"></i>
                                                         </h4>
                                                         <div className="card-body p-0 d-flex">
                                                             <ul className="d-flex align-items-center justify-content-between mt-2">
                                                                 <li className="me-1">
-                                                                    <Link
-                                                                        to={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareData?.shareableLink || `${post.id}`)}`}
+                                                                    <a
+                                                                        href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`http://localhost:3000/single-post/${post.id}`)}`}
                                                                         className="btn-round-lg bg-facebook"
                                                                         target="_blank"
                                                                         rel="noopener noreferrer"
                                                                         onClick={() => handleShare(post.id)}
                                                                     >
                                                                         <i className="font-xs ti-facebook text-white"></i>
-                                                                    </Link>
+                                                                    </a>
                                                                 </li>
                                                                 <li className="me-1">
-                                                                    <Link
-                                                                        to={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareData?.shareableLink || `${post.id}`)}&text=Check out this post!`}
+                                                                    <a
+                                                                        href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out this post: http://localhost:3000/single-post/${post.id}`)}`}
                                                                         className="btn-round-lg bg-twitter"
                                                                         target="_blank"
                                                                         rel="noopener noreferrer"
                                                                         onClick={() => handleShare(post.id)}
                                                                     >
                                                                         <i className="font-xs ti-twitter-alt text-white"></i>
-                                                                    </Link>
+                                                                    </a>
                                                                 </li>
                                                                 <li className="me-1">
-                                                                    <Link
-                                                                        to={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareData?.shareableLink || `https://social.techxdeveloper.com/posts/${post.id}`)}`}
+                                                                    <a
+                                                                        href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(`http://localhost:3000/single-post/${post.id}`)}`}
                                                                         className="btn-round-lg bg-linkedin"
                                                                         target="_blank"
                                                                         rel="noopener noreferrer"
                                                                         onClick={() => handleShare(post.id)}
                                                                     >
                                                                         <i className="font-xs ti-linkedin text-white"></i>
-                                                                    </Link>
+                                                                    </a>
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -1249,17 +1177,17 @@ export const DefaultPage = ({post}) => {
                                                             Link</h4>
                                                         <i
                                                             className="feather-copy position-absolute right-35 mt-3 font-xs text-grey-500"
-                                                            onClick={(event) => handleCopyLink(event, shareData?.shareableLink || `https://social.techxdeveloper.com/${post.id}`)}
+                                                            onClick={(event) => handleCopyLink(event, `http://localhost:3000/single-post/${post.id}`)}
                                                         ></i>
 
                                                         <input
                                                             type="text"
-                                                            value={shareData?.shareableLink || `https://social.techxdeveloper.com/${post.id}`}
+                                                            value={`http://localhost:3000/single-post/${post.id}`}
                                                             className="bg-grey text-grey-500 font-xssss border-0 lh-32 p-2 font-xssss fw-600 rounded-3 w-100 theme-dark-bg"
                                                             readOnly
                                                         />
-                                                        {copySuccess && <span
-                                                            className="text-success mt-2">Link copied!</span>} {/* Success message */}
+                                                        {copySuccess &&
+                                                            <span className="text-success mt-2">Link copied!</span>}
                                                     </div>
 
 
@@ -1283,20 +1211,20 @@ export const DefaultPage = ({post}) => {
                                                                              className="d-flex align-items-start mb-3">
                                                                             <figure className="avatar me-3">
                                                                                 <img
-                                                                                    src={userComment.user_image || '/images/profile-2.png'}
+                                                                                    src={userComment.user.image || '/images/profile-2.png'}
                                                                                     alt="user"
                                                                                     className="rounded-circle w30"
                                                                                 />
                                                                             </figure>
                                                                             <div className="comment-content">
                                                                                 <h5 className="fw-600 text-grey-900 font-xssss mb-1">
-                                                                                    {userComment.username || "Unknown User"}
+                                                                                    {userComment.user.username || "Unknown User"}
                                                                                     <span className="d-none-xss">
-                                        {formatTimeAgo(userComment.createdAt)}
-                                    </span>
+                                                                          {formatTimeAgo(userComment.createdAt)}
+                                                                                 </span>
                                                                                 </h5>
                                                                                 <p className="fw-400 text-grey-500 lh-24 font-xss m-0 text-dark">
-                                                                                    {typeof userComment.comment === 'string' ? userComment.comment : 'Invalid comment'}
+                                                                                    {typeof userComment.content === 'string' ? userComment.content : 'Invalid comment'}
                                                                                 </p>
                                                                             </div>
                                                                         </div>
@@ -1364,12 +1292,12 @@ export const DefaultPage = ({post}) => {
                                                             className="card-body d-flex pt-3 ps-4 pe-4 pb-0 border-top-xs bor-0">
                                                             <figure className="avatar me-3">
                                                                 <img
-                                                                    src={friend.sender?.image || '/images/profile-2.png'}
+                                                                    src={friend.friend?.image || '/images/profile-2.png'}
                                                                     alt="image"
                                                                     className="shadow-sm rounded-circle w45"/>
                                                             </figure>
                                                             <h4 className="fw-700 text-grey-900 font-xssss mt-1">
-                                                                {friend.sender?.username || "No username available"}
+                                                                {friend.friend?.username || "No username available"}
                                                                 <span
                                                                     className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">12 mutual friends</span>
                                                             </h4>
@@ -1413,11 +1341,11 @@ export const DefaultPage = ({post}) => {
                                                     <div key={index}
                                                          className="card-body bg-transparent-card d-flex p-3 bg-greylight m-3 rounded-3">
                                                         <figure className="avatar me-2 mb-0">
-                                                            <img src={friend.sender?.image || '/images/profile-2.png'}
+                                                            <img src={friend.friend?.image || '/images/profile-2.png'}
                                                                  className="shadow-sm rounded-circle w45"/>
                                                         </figure>
                                                         <h4 className="fw-700 text-grey-900 font-xssss mt-2">
-                                                            {friend.sender?.username || "No username available"}
+                                                            {friend.friend?.username || "No username available"}
                                                             <span
                                                                 className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">12 mutual friends</span>
                                                         </h4>
@@ -1466,7 +1394,7 @@ export const DefaultPage = ({post}) => {
                                             </li>
                                             <li className="w20">
                                                 <Link to="#">
-                                                    <img
+                                                <img
                                                         src="/images/user-3.png"
                                                         alt="user"
                                                         className="w35 d-inline-block"
@@ -1495,92 +1423,8 @@ export const DefaultPage = ({post}) => {
                                     </div>
 
 
-                                    <div className="card w-100 shadow-xss rounded-xxl border-0 mb-3">
-                                        <div className="card-body d-flex align-items-center p-4">
-                                            <h4 className="fw-700 mb-0 font-xssss text-grey-900">Suggest
-                                                Pages</h4>
-                                            <Link to="/default-group.html"
-                                                  className="fw-600 ms-auto font-xssss text-primary">See
-                                                all</Link>
-                                        </div>
-                                        <div
-                                            className="card-body d-flex pt-4 ps-4 pe-4 pb-0 overflow-hidden border-top-xs bor-0">
-                                            <img src="/images/g-2.jpg" alt="img"
-                                                 className="img-fluid rounded-xxl mb-2"/>
-                                        </div>
-                                        <div
-                                            className="card-body d-flex align-items-center pt-0 ps-4 pe-4 pb-4">
-                                            <Link to="#"
-                                                  className="p-2 lh-28 w-100 bg-grey text-grey-800 text-center font-xssss fw-700 rounded-xl"><i
-                                                className="feather-external-link font-xss me-2"></i> Like
-                                                Page</Link>
-                                        </div>
-
-                                        <div
-                                            className="card-body d-flex pt-0 ps-4 pe-4 pb-0 overflow-hidden">
-                                            <img src="/images/g-3.jpg" alt="img"
-                                                 className="img-fluid rounded-xxl mb-2 bg-lightblue"/>
-                                        </div>
-                                        <div
-                                            className="card-body d-flex align-items-center pt-0 ps-4 pe-4 pb-4">
-                                            <Link to="#"
-                                                  className="p-2 lh-28 w-100 bg-grey text-grey-800 text-center font-xssss fw-700 rounded-xl"><i
-                                                className="feather-external-link font-xss me-2"></i> Like
-                                                Page</Link>
-                                        </div>
 
 
-                                    </div>
-
-
-                                    <div className="card w-100 shadow-xss rounded-xxl border-0 mb-3">
-                                        <div className="card-body d-flex align-items-center  p-4">
-                                            <h4 className="fw-700 mb-0 font-xssss text-grey-900">Event</h4>
-                                            <Link to="/default-event.html"
-                                                  className="fw-600 ms-auto font-xssss text-primary">See
-                                                all</Link>
-                                        </div>
-                                        <div
-                                            className="card-body d-flex pt-0 ps-4 pe-4 pb-3 overflow-hidden">
-                                            <div className="bg-success me-2 p-3 rounded-xxl"><h4
-                                                className="fw-700 font-lg ls-3 lh-1 text-white mb-0"><span
-                                                className="ls-1 d-block font-xsss text-white fw-600">FEB</span>22
-                                            </h4>
-                                            </div>
-                                            <h4 className="fw-700 text-grey-900 font-xssss mt-2">Meeting
-                                                with
-                                                clients <span
-                                                    className="d-block font-xsssss fw-500 mt-1 lh-4 text-grey-500">41 madison ave, floor 24 new work, NY 10010</span>
-                                            </h4>
-                                        </div>
-
-                                        <div
-                                            className="card-body d-flex pt-0 ps-4 pe-4 pb-3 overflow-hidden">
-                                            <div className="bg-warning me-2 p-3 rounded-xxl"><h4
-                                                className="fw-700 font-lg ls-3 lh-1 text-white mb-0"><span
-                                                className="ls-1 d-block font-xsss text-white fw-600">APR</span>30
-                                            </h4>
-                                            </div>
-                                            <h4 className="fw-700 text-grey-900 font-xssss mt-2">Developer
-                                                Programe <span
-                                                    className="d-block font-xsssss fw-500 mt-1 lh-4 text-grey-500">41 madison ave, floor 24 new work, NY 10010</span>
-                                            </h4>
-                                        </div>
-
-                                        <div
-                                            className="card-body d-flex pt-0 ps-4 pe-4 pb-3 overflow-hidden">
-                                            <div className="bg-primary me-2 p-3 rounded-xxl"><h4
-                                                className="fw-700 font-lg ls-3 lh-1 text-white mb-0"><span
-                                                className="ls-1 d-block font-xsss text-white fw-600">APR</span>23
-                                            </h4>
-                                            </div>
-                                            <h4 className="fw-700 text-grey-900 font-xssss mt-2">Aniversary
-                                                Event <span
-                                                    className="d-block font-xsssss fw-500 mt-1 lh-4 text-grey-500">41 madison ave, floor 24 new work, NY 10010</span>
-                                            </h4>
-                                        </div>
-
-                                    </div>
                                 </div>
                             </div>
                         )}

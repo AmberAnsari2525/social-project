@@ -5,6 +5,8 @@ import {LoginModal} from "../Modal/loginModal";
 import {AuthContext} from "../Context/Authcontext";
 import {registerUser} from "../Services/api";
 import {Spinner} from "react-bootstrap";
+import CircleIcon from '@mui/icons-material/Circle';
+import { Snackbar } from '@mui/material';
 
 
 export const RegisterPage = () => {
@@ -12,7 +14,8 @@ export const RegisterPage = () => {
     const [isLoginModalOpen, setLoginModalOpen] = useState(false);
     const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
     const [isNavActive, setNavActive] = useState(false); // State for nav button
-
+    const [passwordShow, setPasswordShow] = useState(false)
+    const [confirmPasswordShow, setConfirmPasswordShow] = useState(false)
 
     const handleLoginClick = () => {
         setLoginModalOpen(true);
@@ -35,29 +38,48 @@ export const RegisterPage = () => {
 
 
     const [userData, setUserData] = useState({
-        username: '', email: '', password: '', role: 'user', // Keep the dateOfBirth field but make it optional
+        username: '', email: '', password: '', confirm_password: '', // Keep the dateOfBirth field but make it optional
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [formError, setFormError] = useState({
-        username: '', email: '', password: '', role: 'user',
+        username: '', email: '', password: '', confirm_password:'',
     }); // Error for individual form fields
     const [successMessage, setSuccessMessage] = useState(''); // Add successMessage state
 
     // Handle input changes
     const handleChange = (e) => {
-        setUserData({...userData, [e.target.name]: e.target.value});
-        setFormError({...formError, [e.target.name]: ''}); // Reset specific field error on input change
+        const{name, value} = e.target;
+        if(name === 'password'){
+            if(value.length <=8){
+                setUserData({...userData, [name]: value});
+                setFormError({...formError,[name] :''})
+            }
+        } else{
+        setUserData({...userData, [name]: value});
+        setFormError({...formError, [name]: ''}); // Reset specific field error on input change
+    }
     };
+
 
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // Validate passwords
+
 
         let hasError = false;
         const newFormError = {};
 
-        // Validate form fields
+        if (userData.password !== userData.confirm_password) {
+            setError('Password and Confirm Password do not match.');
+            return;
+        }
+        if (!isLowerCase || !isUpperCase || !hasNumber || !isMinLength) {
+            setErrorMessage(  'Password must contain at least one lowercase letter, one uppercase letter, one number, and be at least 8 characters long.');
+            setErrorAlert(true)
+        }
+
         if (!userData.username) {
             newFormError.username = "Name is required.";
             hasError = true;
@@ -70,10 +92,11 @@ export const RegisterPage = () => {
             newFormError.password = "Password is required.";
             hasError = true;
         }
-        if (!userData.role) {
-            newFormError.role = "Role is required.";
+        if (!userData.confirm_password) {
+            newFormError.confirm_password = "confirm password is required.";
             hasError = true;
         }
+
 
         setFormError(newFormError);
 
@@ -113,7 +136,22 @@ export const RegisterPage = () => {
             setLoading(false); // Ensure loading state is turned off after completion
         }
     };
+    const [errorAlert, setErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [successAlert, setSuccessAlert] = useState(false);
 
+    const handleCloseAlert = () => {
+        setSuccessAlert(false);
+        setErrorAlert(false);
+        setErrorMessage('');
+    };
+
+
+    //handle button case
+    const isLowerCase = /[a-z]/.test(userData.password);
+    const isUpperCase = /[A-Z]/.test(userData.password);
+    const hasNumber = /\d/.test(userData.password);
+    const isMinLength = userData.password.length >= 8;
 
     return (<div>
             <div className="main-wrap">
@@ -141,18 +179,18 @@ export const RegisterPage = () => {
                         ></button>
                         {/* Login Button */}
                         <Link
-                            to="#"
+                            to="/log-in"
                             className="header-btn d-none d-lg-block bg-dark fw-500 text-white font-xsss p-3 ms-auto w100 text-center lh-20 rounded-xl"
-                            onClick={handleLoginClick}
+                            /*onClick={handleLoginClick}*/
                         >
                             Login
                         </Link>
 
                         {/* Register Button */}
                         <Link
-                            to="#"
+                            to="/sign-up"
                             className="header-btn d-none d-lg-block bg-current fw-500 text-white font-xsss p-3 ms-2 w100 text-center lh-20 rounded-xl"
-                            onClick={handleRegisterClick}
+                           /* onClick={handleRegisterClick}*/
                         >
                             Register
                         </Link>
@@ -195,37 +233,77 @@ export const RegisterPage = () => {
                                     </div>
                                     <div className="form-group icon-input mb-3">
                                         <input
-                                            type="password"
+                                            type={passwordShow ? "text" : "password"}
                                             name="password"
                                             className={`style2-input ps-5 form-control text-grey-900 font-xsss fw-600 form-control ${formError.password ? 'is-invalid' : ''}`}
                                             placeholder="Password"
                                             value={userData.password}
                                             onChange={handleChange}
                                         />
+                                        <span
+                                            className={`feather-${passwordShow ? 'eye-off' : 'eye'} me-3 position-absolute`}
+                                            onClick={() => setPasswordShow(!passwordShow)}
+                                            style={{right: '15px', top: '20px', cursor: 'pointer'}}></span>
                                         <i className="font-sm ti-lock text-grey-500 pe-0"></i>
                                         {formError.password &&
                                             <div className="invalid-feedback">{formError.password}</div>}
                                     </div>
                                     <div className="form-group icon-input mb-3">
-                                        <i className="font-sm ti-briefcase text-grey-500 pe-0"></i>
-                                        <select
-                                            name="role"
-                                            className={`style2-input ps-5 form-control text-grey-900 font-xsss fw-600 form-control ${formError.role ? 'is-invalid' : ''}`}
-                                            value={userData.role}
+                                        <input
+                                            type={confirmPasswordShow ? "text" : "password"}
+                                            name="confirm_password"
+                                            className={`style2-input ps-5 form-control text-grey-900 font-xsss fw-600 form-control ${formError.password ? 'is-invalid' : ''}`}
+                                            placeholder="Password"
+                                            value={userData.confirm_password}
                                             onChange={handleChange}
-                                            style={{lineHeight: '45px'}}
-                                        >
-                                            <option value="">Select Role</option>
-                                            <option value="user">User</option>
-                                            <option value="admin">Admin</option>
-                                        </select>
-
+                                        />
+                                        <span
+                                            className={`feather-${confirmPasswordShow ? 'eye-off' : 'eye'} me-3 position-absolute`}
+                                            onClick={() => setConfirmPasswordShow(!confirmPasswordShow)}
+                                            style={{right: '15px', top: '20px', cursor: 'pointer'}}></span>
+                                        <i className="font-sm ti-lock text-grey-500 pe-0"></i>
+                                        {formError.password &&
+                                            <div className="invalid-feedback">{formError.password}</div>}
                                     </div>
 
                                     <div className="form-check text-left mb-3">
                                         <input type="checkbox" className="form-check-input mt-2" id="exampleCheck2"/>
                                         <label className="form-check-label font-xsss text-grey-500">Accept Term and
                                             Conditions</label>
+                                    </div>
+                                    <div className='row'>
+                                        <div className='col-6'>
+                                            <div className='validationDiv'>
+                                                <CircleIcon
+                                                    sx={{color: isLowerCase ? 'blue' : 'gray', fontSize: 'small'}}
+                                                    className='icon'/>
+                                                <span>One lowercase</span>
+                                            </div>
+                                        </div>
+                                        <div className='col-6'>
+                                            <div className='validationDiv'>
+                                                <CircleIcon
+                                                    sx={{color:  hasNumber? 'blue' : 'gray', fontSize: 'small'}}/>
+                                                <span>One number must</span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div className='row'>
+                                        <div className='col-6'>
+                                            <div className='validationDiv'>
+                                                <CircleIcon
+                                                    sx={{color: isUpperCase ? 'blue' : 'gray', fontSize: 'small'}}/>
+                                                <span> One uppercase</span>
+                                            </div>
+                                        </div>
+                                        <div className='col-6'>
+                                            <div className='validationDiv'>
+                                                <CircleIcon
+                                                    sx={{color: isMinLength ? 'blue' : 'gray', fontSize: 'small'}}/>
+                                                <span>8 charcter minimum</span>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div className="col-sm-12 p-0 text-left">
@@ -247,22 +325,29 @@ export const RegisterPage = () => {
                                     </div>
                                 </form>
                                 {error && <div className="alert alert-danger">{error}</div>}
+                                <Snackbar
+                                    open={errorAlert}
+                                    autoHideDuration={6000}
+                                    onClose={handleCloseAlert}
+                                    message={errorMessage}
+                                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                                />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Login Modal */}
-            {isLoginModalOpen && (<>
-                    <LoginModal closeModal={closeModal}/>
-                </>)}
+        {/* Login Modal */}
+        {isLoginModalOpen && (<>
+            <LoginModal closeModal={closeModal}/>
+        </>)}
 
-            {/* Register Modal */}
-            {/* Register Modal */}
-            {isRegisterModalOpen && (<>
-                    <Regmodal closeModal={closeModal}/>
-                </>)}
+        {/* Register Modal */}
+        {/* Register Modal */}
+        {isRegisterModalOpen && (<>
+            <Regmodal closeModal={closeModal}/>
+        </>)}
 
-        </div>);
+    </div>);
 };

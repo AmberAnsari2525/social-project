@@ -143,14 +143,14 @@ export const Navbar = ({handleChatToggle}) => {
                     <i className="feather-video font-lg bg-greylight btn-round-lg theme-dark-bg text-grey-500"
                        style={{padding: 'inherit'}}></i>
                 </Link>
-                <Link to="/default-group" className="p-2 text-center ms-0 menu-icon center-menu-icon">
+                <Link to="/user" className="p-2 text-center ms-0 menu-icon center-menu-icon">
                     <i className="feather-user font-lg bg-greylight btn-round-lg theme-dark-bg text-grey-500"
                        style={{padding: 'inherit'}}></i>
                 </Link>
-                <Link to="/shop-2" className="p-2 text-center ms-0 menu-icon center-menu-icon">
+                {/*<Link to="/shop-2" className="p-2 text-center ms-0 menu-icon center-menu-icon">
                     <i className="feather-shopping-bag font-lg bg-greylight btn-round-lg theme-dark-bg text-grey-500"
                        style={{padding: 'inherit'}}></i>
-                </Link>
+                </Link>*/}
 
                 {/* Notification Icon */}
                 <Link to="#"
@@ -275,13 +275,13 @@ export const Navbar = ({handleChatToggle}) => {
                                 </li>
 
 
-                                <li>
+                                {/*<li>
                                     <Link to="/default-analytics"
                                           className="nav-content-bttn open-font h-auto pt-2 pb-2">
                                         <i className="font-sm feather-pie-chart me-3 text-grey-500"></i>
                                         <span>Analytics</span>
                                     </Link>
-                                </li>
+                                </li>*/}
                                 <li>
                                     <Link to="/default-message"
                                           className="nav-content-bttn open-font h-auto pt-2 pb-2">

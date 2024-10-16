@@ -8,6 +8,7 @@ const AccountDetails = () => {
         email: '',
         image: '',
     });
+    const [imageFile, setImageFile] = useState(null); // Store the image file
     const [originalData, setOriginalData] = useState({}); // Store original user data
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false); // To show success message
@@ -61,15 +62,15 @@ const AccountDetails = () => {
                 return; // Exit if the file is too large
             }
 
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setUserData((prevData) => ({
-                    ...prevData,
-                    image: reader.result,
-                }));
-                setIsChanged(true);
-            };
-            reader.readAsDataURL(file);
+            // Create a URL for the selected image and update userData.image
+            const imageUrl = URL.createObjectURL(file); // Create a temporary URL
+            setUserData((prevData) => ({
+                ...prevData,
+                image: imageUrl, // Update the userData with the temporary image URL
+            }));
+
+            setImageFile(file); // Store the file for upload
+            setIsChanged(true);
         }
     };
 
@@ -77,8 +78,18 @@ const AccountDetails = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('Submitting user data:', userData);
+
+        // Create a FormData object to send image and other data
+        const formData = new FormData();
+        formData.append('username', userData.username);
+        formData.append('email', userData.email);
+
+        if (imageFile) {
+            formData.append('image', imageFile); // Append the image file to FormData
+        }
+
         try {
-            const response = await updateProfile(userData); // Make sure the updateProfile sends the correct payload
+            const response = await updateProfile(formData); // Make sure the API can handle multipart form data
             console.log('Profile updated:', response);
 
             // Update user data with response
@@ -96,7 +107,6 @@ const AccountDetails = () => {
             setError('Failed to update profile.');
         }
     };
-
 
     return (
         <div className="bg-lightblue theme-dark-bg right-chat-active">

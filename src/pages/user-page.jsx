@@ -1,11 +1,20 @@
 import React from 'react';
 import '../css/style.css';
 import {useState,useEffect} from 'react'
-import {addComment, addPost, fetchUserData, getCommentsById, sharePosts, userGetPost} from "../Services/api";
+import {
+    addComment,
+    addPost,
+    deletePost,
+    fetchUserData,
+    getCommentsById,
+    sharePosts,
+    userGetPost
+} from "../Services/api";
 import moment from 'moment';
-import {Link, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 
 const UserProfile = () => {
+    const navigate= useNavigate()
     const {id} =useParams();
     const [mainContentLoading, setMainContentLoading] = useState(true); //main conntent lodadin state
     //mIN CONTENT Loading
@@ -191,6 +200,7 @@ const UserProfile = () => {
     }, []);
 
     const [isReactionActive, setIsReactionActive] = useState(null); // To track which post's emoji wrap is active
+    const [likedPosts, setLikedPosts] = useState(new Map()); // Use a Map to track post IDs and like IDs
 
     //share post sate
     const [shareData, setShareData] = useState(null); //state share post
@@ -205,6 +215,7 @@ const UserProfile = () => {
     const [activePost, setActivePost] = useState(null);  // Track the active post
     const [loadingComments, setLoadingComments] = useState(false);
     const [showComments, setShowComments] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
 
     // Handle reaction click
@@ -271,6 +282,7 @@ const UserProfile = () => {
         }
     };
 
+    const [commentsByPost, setCommentsByPost] = useState({});
 
 
     // Handle showing comments
@@ -301,6 +313,58 @@ const UserProfile = () => {
             await fetchComments(postId); // Fetch updated comments for the specific post
         }
     };
+    const [successMessage, setSuccessMessage] = useState('');
+
+    const [selectedPostId, setSelectedPostId] = useState(null); // Store the post ID to delete
+    const [showDeletePopup, setShowDeletePopup] = useState(false);
+
+    const handleDeletePostClick = (postId) => {
+        setSelectedPostId(postId); // Store the ID of the post to delete
+        setShowDeletePopup(true);  // Show the modal
+    };
+
+    // Cancel the deletion and close the modal
+    const cancelDelete = () => {
+        setShowDeletePopup(false);  // Hide the modal
+        setSelectedPostId(null);    // Reset the selected post ID
+    };
+
+    // Confirm and delete the post
+    const confirmDeletePost = async () => {
+        try {
+            if (!selectedPostId) {
+                throw new Error("Post ID is missing.");
+            }
+
+            // Use the post ID stored in the state
+            const response = await deletePost(selectedPostId);
+
+            if (response.status === 200 || response.status === 204) {
+                console.log('Post deleted successfully');
+                setSuccessMessage('Post deleted successfully');
+                setShowDeletePopup(false); // Close the modal after deletion
+            } else {
+                setErrorMessage('Failed to delete the post.');
+                console.error('Error:', response);
+            }
+        } catch (error) {
+            if (error.response) {
+                // Server responded with a status other than 2xx
+                if (error.response.status === 404) {
+                    setErrorMessage('The post was not found. It may have been deleted already.');
+                } else {
+                    setErrorMessage(error.response.data.message || 'Failed to delete the post.');
+                }
+                console.error('Error:', error.response.data);
+            } else if (error.request) {
+                setErrorMessage('No response from the server. Please try again later.');
+                console.error('No response:', error.request);
+            } else {
+                setErrorMessage('An error occurred. Please try again.');
+                console.error('Error:', error.message);
+            }
+        }
+    };
 
 // for time
     const formatTimeAgo = (createdAt) => {
@@ -319,6 +383,10 @@ const UserProfile = () => {
             return `${diffInDays} day${diffInDays === 1 ? '' : 's'} ago`;
         }
     };
+    const handleNavigateToPost = (post_id) => {
+        navigate(`/single-post/${post_id}`);
+    };
+
 
     return (
         <div >
@@ -390,16 +458,7 @@ const UserProfile = () => {
                                         >
                                             <i className="feather-mail font-md"></i>
                                         </a>
-                                        <a
-                                            href="#"
-                                            id="dropdownMenu4"
-                                            className="d-none d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700"
-                                            data-toggle="dropdown"
-                                            aria-haspopup="true"
-                                            aria-expanded="false"
-                                        >
-                                            <i className="ti-more font-md text-dark"></i>
-                                        </a>
+
                                         <div
                                             className="dropdown-menu dropdown-menu-end p-4 rounded-xxl border-0 shadow-lg"
                                             aria-labelledby="dropdownMenu4">
@@ -413,126 +472,50 @@ const UserProfile = () => {
                                         id="pills-tab"
                                         role="tablist"
                                     >
+                                        <li className="list-inline-item me-5">
+                                            <Link
+                                                className="fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block"
+                                                to="/account-information"
+                                                data-toggle="tab"
+                                            >
+                                                Update Profile
+                                            </Link>
+                                        </li>
                                         <li className="active list-inline-item me-5">
-                                            <a
+                                            <Link
                                                 className="fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block active"
-                                                href="#navtabs1"
+                                                to="/default-member"
                                                 data-toggle="tab"
                                             >
-                                                About
-                                            </a>
+                                                Friends
+                                            </Link>
                                         </li>
                                         <li className="list-inline-item me-5">
-                                            <a
+                                            <Link
                                                 className="fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block"
-                                                href="#navtabs2"
+                                                to="/password"
                                                 data-toggle="tab"
                                             >
-                                                Membership
-                                            </a>
+                                                Change Password
+                                            </Link>
                                         </li>
                                         <li className="list-inline-item me-5">
-                                            <a
+                                            <Link
                                                 className="fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block"
-                                                href="#navtabs3"
+                                                to="/account-information"
                                                 data-toggle="tab"
                                             >
-                                            Discussion
-                                            </a>
+                                                Update Profile
+                                            </Link>
                                         </li>
-                                        <li className="list-inline-item me-5">
-                                            <a
-                                                className="fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block"
-                                                href="#navtabs4"
-                                                data-toggle="tab"
-                                            >
-                                                Video
-                                            </a>
-                                        </li>
-                                        <li className="list-inline-item me-5">
-                                            <a
-                                                className="fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block"
-                                                href="#navtabs3"
-                                                data-toggle="tab"
-                                            >
-                                                Group
-                                            </a>
-                                        </li>
-                                        <li className="list-inline-item me-5">
-                                            <a
-                                                className="fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block"
-                                                href="#navtabs1"
-                                                data-toggle="tab"
-                                            >
-                                                Events
-                                            </a>
-                                        </li>
-                                        <li className="list-inline-item me-5">
-                                            <a
-                                                className="fw-700 me-sm-5 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block"
-                                                href="#navtabs7"
-                                                data-toggle="tab"
-                                            >
-                                                Media
-                                            </a>
-                                        </li>
+
                                     </ul>
                                 </div>
                             </div>
                         </div>
                         <div className="col-xl-4 col-xxl-3 col-lg-4 pe-0">
-                            <div className="card w-100 shadow-xss rounded-xxl border-0 mb-3 mt-3">
-                                <div className="card-body p-3 border-0">
-                                    <div className="row">
-                                        <div className="col-3">
-                                            <div className="chart-container w50 h50">
-                                                <div className="chart position-relative" data-percent="78"
-                                                style={{backgroundColor:'#a7d212'}}>
-                                                    <span className="percent fw-700 font-xsss" data-after="%">78</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-8 ps-1">
-                                            <h4 className="font-xsss d-block fw-700 mt-2 mb-0">Advanced Python
-                                                Sass <span
-                                                    className="float-right mt-2 font-xsssss text-grey-500">87%</span>
-                                            </h4>
-                                            <p className="font-xssss fw-600 text-grey-500 lh-26 mb-0">Designer</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="card w-100 shadow-xss rounded-xxl border-0 mb-3">
-                                <div className="card-body d-block p-4">
-                                    <h4 className="fw-700 mb-3 font-xsss text-grey-900">About</h4>
-                                    <p className="fw-500 text-grey-500 lh-24 font-xssss mb-0">Lorem ipsum dolor sit
-                                        amet, consectetur adipiscing elit. Morbi nulla dolor, ornare at commodo non,
-                                        feugiat non nisi. Phasellus faucibus mollis pharetra. Proin blandit ac massa sed
-                                        rhoncus</p>
-                                </div>
-                                <div className="card-body border-top-xs d-flex">
-                                    <i className="feather-lock text-grey-500 me-3 font-lg"></i>
-                                    <h4 className="fw-700 text-grey-900 font-xssss mt-0">Private <span
-                                        className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">What's up, how are you?</span>
-                                    </h4>
-                                </div>
 
-                                <div className="card-body d-flex pt-0">
-                                    <i className="feather-eye text-grey-500 me-3 font-lg"></i>
-                                    <h4 className="fw-700 text-grey-900 font-xssss mt-0">Visble <span
-                                        className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">Anyone can find you</span>
-                                    </h4>
-                                </div>
-                                <div className="card-body d-flex pt-0">
-                                    <i className="feather-map-pin text-grey-500 me-3 font-lg"></i>
-                                    <h4 className="fw-700 text-grey-900 font-xssss mt-1">Flodia, Austia </h4>
-                                </div>
-                                <div className="card-body d-flex pt-0">
-                                    <i className="feather-users text-grey-500 me-3 font-lg"></i>
-                                    <h4 className="fw-700 text-grey-900 font-xssss mt-1">Genarel Group</h4>
-                                </div>
-                            </div>
-                            <div className="card w-100 shadow-xss rounded-xxl border-0 mb-3">
+                            <div className="card w-100 shadow-xss rounded-xxl border-0 mb-3 mt-3">
                                 <div className="card-body d-flex align-items-center  p-4">
                                     <h4 className="fw-700 mb-0 font-xssss text-grey-900">Photos</h4>
                                     <a href="#" className="fw-600 ms-auto font-xssss text-primary">See all</a>
@@ -572,59 +555,33 @@ const UserProfile = () => {
                                 </div>
                             </div>
 
-                            <div className="card w-100 shadow-xss rounded-xxl border-0 mb-3">
-                                <div className="card-body d-flex align-items-center  p-4">
-                                    <h4 className="fw-700 mb-0 font-xssss text-grey-900">Event</h4>
-                                    <a href="#" className="fw-600 ms-auto font-xssss text-primary">See all</a>
-                                </div>
-                                <div className="card-body d-flex pt-0 ps-4 pe-4 pb-3 overflow-hidden">
-                                    <div className="bg-success me-2 p-3 rounded-xxl"><h4
-                                        className="fw-700 font-lg ls-3 lh-1 text-white mb-0"><span
-                                        className="ls-1 d-block font-xsss text-white fw-600">FEB</span>22</h4></div>
-                                    <h4 className="fw-700 text-grey-900 font-xssss mt-2">Meeting with clients <span
-                                        className="d-block font-xsssss fw-500 mt-1 lh-4 text-grey-500">41 madison ave, floor 24 new work, NY 10010</span>
-                                    </h4>
-                                </div>
-
-                                <div className="card-body d-flex pt-0 ps-4 pe-4 pb-3 overflow-hidden">
-                                    <div className="bg-warning me-2 p-3 rounded-xxl"><h4
-                                        className="fw-700 font-lg ls-3 lh-1 text-white mb-0"><span
-                                        className="ls-1 d-block font-xsss text-white fw-600">APR</span>30</h4></div>
-                                    <h4 className="fw-700 text-grey-900 font-xssss mt-2">Developer Programe <span
-                                        className="d-block font-xsssss fw-500 mt-1 lh-4 text-grey-500">41 madison ave, floor 24 new work, NY 10010</span>
-                                    </h4>
-                                </div>
-
-                                <div className="card-body d-flex pt-0 ps-4 pe-4 pb-3 overflow-hidden">
-                                    <div className="bg-primary me-2 p-3 rounded-xxl"><h4
-                                        className="fw-700 font-lg ls-3 lh-1 text-white mb-0"><span
-                                        className="ls-1 d-block font-xsss text-white fw-600">APR</span>23</h4></div>
-                                    <h4 className="fw-700 text-grey-900 font-xssss mt-2">Aniversary Event <span
-                                        className="d-block font-xsssss fw-500 mt-1 lh-4 text-grey-500">41 madison ave, floor 24 new work, NY 10010</span>
-                                    </h4>
-                                </div>
-
-                            </div>
                         </div>
-                        <div className="col-xl-8 col-xxl-9 col-lg-8">
+                        <div className="col-xl-8 col-xxl-9 col-lg-8 mt-3">
                             <div
-                                className="card w-100 shadow-xss rounded-xxl border-0 ps-4 pt-4 pe-4 pb-3 mb-3 mt-3">
+                                className="card w-100 shadow-xss rounded-xxl border-0 ps-4 pt-4 pe-4 pb-3 mb-3">
                                 <div className="card-body p-0">
                                     {/* Create Post Button */}
                                     <button
                                         className="font-xssss fw-600 card-body p-0 d-flex align-items-center"
                                         onClick={handleCreatePostClick}
                                         style={{
-                                            color: createPost.content.trim().length === 0 && createPost.media_link.length === 0 ? 'lightgrey' : 'black', // Dynamic text color
+                                            color:
+                                                (createPost.content.trim().length === 0 && createPost.media_link.length === 0) || !createPost.visibility
+                                                    ? 'lightgrey'  // Gray color when content/media/visibility is not selected
+                                                    : 'black',     // Black color when all conditions are met
                                             border: 'inherit',
                                             background: 'inherit'
                                         }}
-                                        disabled={createPost.content.trim().length === 0 && createPost.media_link.length === 0} // Disable when both content and media are empty
-                                    >
+                                        disabled={
+                                            (createPost.content.trim().length === 0 && createPost.media_link.length === 0) || !createPost.visibility
+                                        }>
                                         <i
                                             className={`btn-round-sm font-xs feather-edit-3 me-2 bg-greylight`}
                                             style={{
-                                                color: createPost.content.trim().length === 0 && createPost.media_link.length === 0 ? 'lightgrey' : 'black', // Dynamic icon color
+                                                color:
+                                                    (createPost.content.trim().length === 0 && createPost.media_link.length === 0) || !createPost.visibility
+                                                        ? 'lightgrey'  // Gray color when content/media/visibility is not selected
+                                                        : 'black', // Dynamic icon color
                                             }}
                                         ></i>
                                         Create Post
@@ -648,6 +605,26 @@ const UserProfile = () => {
                                         rows="10"
                                         placeholder="What's on your mind?"
                                     ></textarea>
+                                    {/* Visibility Selector */}
+                                    <div className="visibility-selector mt-3">
+                                        <label className="font-xssss text-grey-500 fw-500">
+                                            Select Visibility:
+                                        </label>
+                                        <select
+                                            name="visibility"
+                                            value={createPost.visibility}
+                                            onChange={(e) => setCreatePost({
+                                                ...createPost,
+                                                visibility: e.target.value
+                                            })}
+                                            className="form-select"
+                                        >
+                                            <option value="">Select visibility</option>
+                                            {/* Placeholder option */}
+                                            <option value="public">Public</option>
+                                            <option value="private">Private</option>
+                                        </select>
+                                    </div>
 
 
                                     {/* Display selected images and videos */}
@@ -733,11 +710,7 @@ const UserProfile = () => {
 
                                 {/* Action buttons below the textarea */}
                                 <div className="card-body d-flex p-0 mt-0">
-                                    <Link to="#"
-                                          className="d-flex align-items-center font-xssss fw-600 ls-1 text-grey-700 text-dark pe-4">
-                                        <i className="font-md text-danger feather-video me-2"></i>
-                                        <span className="d-none-xs">Live Video</span>
-                                    </Link>
+
 
                                     {/* File upload buttons */}
                                     <div className="d-flex" style={{cursor: 'pointer'}}>
@@ -756,47 +729,7 @@ const UserProfile = () => {
                                             onChange={handleMediaChange}
                                         />
                                     </div>
-                                    <Link to="#"
-                                          className="d-flex align-items-center font-xssss fw-600 ls-1 text-grey-700 text-dark pe-4">
-                                        <i className="font-md text-warning feather-camera me-2"></i>
-                                        <span className="d-none-xs">Feeling/Activity</span>
-                                    </Link>
-                                    <Link to="#" className="ms-auto" id="dropdownMenu4"
-                                          data-bs-toggle="dropdown"
-                                          aria-expanded="false"><i
-                                        className="ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss"></i></Link>
-                                    <div
-                                        className="dropdown-menu dropdown-menu-start p-4 rounded-xxl border-0 shadow-lg"
-                                        aria-labelledby="dropdownMenu4">
-                                        <div className="card-body p-0 d-flex">
-                                            <i className="feather-bookmark text-grey-500 me-3 font-lg"></i>
-                                            <h4 className="fw-600 text-grey-900 font-xssss mt-0 me-4">Save
-                                                Link <span
-                                                    className="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500">Add this to your saved items</span>
-                                            </h4>
-                                        </div>
-                                        <div className="card-body p-0 d-flex mt-2">
-                                            <i className="feather-alert-circle text-grey-500 me-3 font-lg"></i>
-                                            <h4 className="fw-600 text-grey-900 font-xssss mt-0 me-4">Hide
-                                                Post <span
-                                                    className="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500">Save to your saved items</span>
-                                            </h4>
-                                        </div>
-                                        <div className="card-body p-0 d-flex mt-2">
-                                            <i className="feather-alert-octagon text-grey-500 me-3 font-lg"></i>
-                                            <h4 className="fw-600 text-grey-900 font-xssss mt-0 me-4">Hide all
-                                                from Group <span
-                                                    className="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500">Save to your saved items</span>
-                                            </h4>
-                                        </div>
-                                        <div className="card-body p-0 d-flex mt-2">
-                                            <i className="feather-lock text-grey-500 me-3 font-lg"></i>
-                                            <h4 className="fw-600 mb-0 text-grey-900 font-xssss mt-0 me-4">Unfollow
-                                                Group <span
-                                                    className="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500">Save to your saved items</span>
-                                            </h4>
-                                        </div>
-                                    </div>
+
                                 </div>
                             </div>
                             {/*get post*/}
@@ -806,31 +739,107 @@ const UserProfile = () => {
                                          className="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3">
                                         <div className="card-body p-0 d-flex">
                                             <figure className="avatar me-3">
-                                                <img src={userData.image || "/images/user-7.png"} alt="user avatar"
+                                                <img src={post.user_image || '/images/profile-2.png'} alt="user"
                                                      className="shadow-sm rounded-circle w45"/>
                                             </figure>
-                                            <h4 className="fw-700 text-grey-900 font-xssss mt-1">  {userData.username || 'User Name'}
+                                            <div className="post-visibility-icon">
+                                                {post.visibility === 'public' ? (
+                                                    <i className="icon-public" title="Public Post"></i> // Replace with your public icon
+                                                ) : (
+                                                    <i className="icon-private" title="Private Post"></i> // Replace with your private icon
+                                                )}
+                                            </div>
+                                            <h4 className="fw-700 text-grey-900 font-xssss mt-1">
+                                                {post.username}
                                                 <span
                                                     className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500"> {formatTimeAgo(post.createdAt)}</span>
                                             </h4>
-                                            <a href="#" className="ms-auto" id="dropdownMenu7" data-toggle="dropdown"
-                                               aria-haspopup="true" aria-expanded="false">
+                                            <a href="#" className="ms-auto" id="dropdownMenu4"
+                                               data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i className="ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss"></i>
                                             </a>
                                             <div
-                                                className="dropdown-menu dropdown-menu-end p-4 rounded-xxl border-0 shadow-lg"
-                                                aria-labelledby="dropdownMenu7">
-                                                {/* Dropdown items */}
+                                                className="dropdown-menu dropdown-menu-start p-4 rounded-xxl border-0 shadow-lg"
+                                                aria-labelledby="dropdownMenu4">
+
+                                                <div className="card-body p-0 d-flex">
+                                                    <Link to={`/update-post/${post.id}`}
+                                                          className="fw-600 text-grey-900 font-xssss mt-0 me-4 d-flex align-items-center">
+                                                        <i className="feather-edit text-grey-500 me-3 font-lg"></i>
+                                                        Edit Post
+                                                    </Link>
+                                                </div>
+
+
+                                                <div className="card-body p-0 d-flex"
+                                                     onClick={() => handleDeletePostClick(post.id)}>
+                                                    <i className="feather-trash text-grey-500 me-3 font-lg"></i>
+                                                    <Link to="#"
+                                                          className="fw-600 mb-0 text-grey-900 font-xssss mt-0 me-4">Delete
+                                                        Post t<span
+                                                            className="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500">Delete pos click on delet</span></Link>
+                                                </div>
                                             </div>
+
+                                            {/* Delete Confirmation Modal */}
+                                            {showDeletePopup && (
+                                                <div className="modal show"
+                                                     style={{display: 'block', backdropFilter: 'blur(0.5px)'}}
+                                                     onClick={cancelDelete}>
+                                                    <div className="modal-dialog modal-dialog-centered">
+                                                        <div className="modal-content">
+                                                            <div className="modal-header">
+                                                                <h5 className="modal-title">Confirm
+                                                                    Deletion</h5>
+                                                                <button type="button" className="btn-close"
+                                                                        onClick={cancelDelete}></button>
+                                                            </div>
+                                                            <div className="modal-body">
+                                                                <p>Are you sure you want to delete this
+                                                                    post?</p>
+                                                                {errorMessage &&
+                                                                    <p className="text-danger">{errorMessage}</p>} {/* Show error message */}
+                                                                {successMessage &&
+                                                                    <p className="text-success">{successMessage}</p>} {/* Show success message */}
+                                                            </div>
+                                                            <div className="modal-footer">
+                                                                <button type="button"
+                                                                        className="btn btn-secondary"
+                                                                        onClick={cancelDelete}>No
+                                                                </button>
+                                                                <button type="button" className="btn btn-danger"
+                                                                        onClick={confirmDeletePost}> Yes
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
+
 
                                         <div className="card-body p-0 me-lg-5">
                                             <p className="fw-500 text-grey-500 lh-26 font-xssss w-100 mb-2">
-                                                {post.content}
-                                                <Link to="#" className="fw-600 text-primary ms-2">See
-                                                    more</Link>
+                                                {post.content.split(' ').length <= 20 ? (
+                                                    post.content
+                                                ) : (
+                                                    <>
+                                                        {post.content.split(' ').slice(0, 20).join(' ')}...
+                                                        <Link
+                                                            to="#"
+                                                            className="fw-600 text-primary ms-2"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                handleNavigateToPost(post.id); // Navigate to the single post page
+                                                            }}
+                                                        >
+                                                            See more
+                                                        </Link>
+                                                    </>
+                                                )}
                                             </p>
                                         </div>
+
 
                                         {/* Combined media link and gallery images into a collage */}
                                         <div className="media-collage">
@@ -843,12 +852,22 @@ const UserProfile = () => {
                                                         {(!post.gallery_images || post.gallery_images.length === 0) && (
                                                             <div className="col-12">
                                                                 {post.post_type === "image" && (
-                                                                    <img src={post.media_link} alt="Post media"
-                                                                         className="w-100 mb-2"/>
+                                                                    <img
+                                                                        src={post.media_link}
+                                                                        alt="Post media"
+                                                                        className="w-100 mb-2"
+                                                                        onClick={() => handleNavigateToPost(post.id)} // Navigate on image click
+                                                                    />
                                                                 )}
                                                                 {post.post_type === "video" && (
-                                                                    <video autoPlay loop className="w-100"
-                                                                           controls muted>
+                                                                    <video
+                                                                        autoPlay
+                                                                        loop
+                                                                        className="w-100"
+                                                                        controls
+                                                                        muted
+                                                                        onClick={() => handleNavigateToPost(post.id)} // Navigate on video click
+                                                                    >
                                                                         <source src={post.media_link}
                                                                                 type="video/mp4"/>
                                                                         Your browser does not support the video
@@ -858,125 +877,19 @@ const UserProfile = () => {
                                                             </div>
                                                         )}
 
-                                                        {/* Two images: media_link + 1 gallery image side by side */}
-                                                        {post.gallery_images && post.gallery_images.length === 1 && (
+                                                        {/* Handling other cases like gallery images */}
+                                                        {post.gallery_images && post.gallery_images.length > 0 && (
                                                             <>
-                                                                <div className="col-6">
-                                                                    <img src={post.media_link} alt="Post media"
-                                                                         className="w-100 mb-2"/>
-                                                                </div>
-                                                                <div className="col-6">
-                                                                    <img src={post.gallery_images[0]}
-                                                                         alt="Gallery image 1"
-                                                                         className="w-100 mb-2"/>
-                                                                </div>
-                                                            </>
-                                                        )}
-
-                                                        {/* Three images: media_link + 2 gallery images in a row */}
-                                                        {post.gallery_images && post.gallery_images.length === 2 && (
-                                                            <>
-                                                                <div className="col-4">
-                                                                    <img src={post.media_link} alt="Post media"
-                                                                         className="w-100 mb-2"/>
-                                                                </div>
                                                                 {post.gallery_images.map((image, idx) => (
                                                                     <div key={idx} className="col-4">
-                                                                        <img src={image}
-                                                                             alt={`Gallery image ${idx + 1}`}
-                                                                             className="w-100 mb-2"/>
+                                                                        <img
+                                                                            src={image}
+                                                                            alt={`Gallery image ${idx + 1}`}
+                                                                            className="w-100 mb-2"
+                                                                            onClick={() => handleNavigateToPost(post.id)} // Navigate on gallery image click
+                                                                        />
                                                                     </div>
                                                                 ))}
-                                                            </>
-                                                        )}
-
-                                                        {/* Four images: media_link in first row, 2 gallery images in second row */}
-                                                        {post.gallery_images && post.gallery_images.length === 3 && (
-                                                            <>
-                                                                <div className="col-6">
-                                                                    <img src={post.media_link} alt="Post media"
-                                                                         className="w-100 mb-2"/>
-                                                                </div>
-                                                                <div className="col-6">
-                                                                    <img src={post.gallery_images[0]}
-                                                                         alt="Gallery image 1"
-                                                                         className="w-100 mb-2"/>
-                                                                </div>
-                                                                <div className="col-6">
-                                                                    <img src={post.gallery_images[1]}
-                                                                         alt="Gallery image 2"
-                                                                         className="w-100 mb-2"/>
-                                                                </div>
-                                                                <div className="col-6">
-                                                                    <img src={post.gallery_images[2]}
-                                                                         alt="Gallery image 3"
-                                                                         className="w-100 mb-2"/>
-                                                                </div>
-                                                            </>
-                                                        )}
-
-                                                        {/* Five images: media_link + 2 gallery images in first row, 2 gallery images in second row */}
-                                                        {post.gallery_images && post.gallery_images.length === 4 && (
-                                                            <>
-                                                                <div className="col-4">
-                                                                    <img src={post.media_link} alt="Post media"
-                                                                         className="w-100 mb-2"/>
-                                                                </div>
-                                                                <div className="col-4">
-                                                                    <img src={post.gallery_images[0]}
-                                                                         alt="Gallery image 1"
-                                                                         className="w-100 mb-2"/>
-                                                                </div>
-                                                                <div className="col-4">
-                                                                    <img src={post.gallery_images[1]}
-                                                                         alt="Gallery image 2"
-                                                                         className="w-100 mb-2"/>
-                                                                </div>
-                                                                <div className="col-6">
-                                                                    <img src={post.gallery_images[2]}
-                                                                         alt="Gallery image 3"
-                                                                         className="w-100 mb-2"/>
-                                                                </div>
-                                                                <div className="col-6">
-                                                                    <img src={post.gallery_images[3]}
-                                                                         alt="Gallery image 4"
-                                                                         className="w-100 mb-2"/>
-                                                                </div>
-                                                            </>
-                                                        )}
-
-                                                        {/* More than five images: media_link + first 2 gallery images in first row, 2 gallery images in second row, indicator for more */}
-                                                        {post.gallery_images && post.gallery_images.length > 5 && (
-                                                            <>
-                                                                <div className="col-4">
-                                                                    <img src={post.media_link} alt="Post media"
-                                                                         className="w-100 mb-2"/>
-                                                                </div>
-                                                                <div className="col-4">
-                                                                    <img src={post.gallery_images[0]}
-                                                                         alt="Gallery image 1"
-                                                                         className="w-100 mb-2"/>
-                                                                </div>
-                                                                <div className="col-4">
-                                                                    <img src={post.gallery_images[1]}
-                                                                         alt="Gallery image 2"
-                                                                         className="w-100 mb-2"/>
-                                                                </div>
-                                                                <div className="col-6">
-                                                                    <img src={post.gallery_images[2]}
-                                                                         alt="Gallery image 3"
-                                                                         className="w-100 mb-2"/>
-                                                                </div>
-                                                                <div
-                                                                    className="col-6 position-relative text-center">
-                                                                    <img src={post.gallery_images[3]}
-                                                                         alt="Gallery image 4"
-                                                                         className="w-100 mb-2"/>
-                                                                    <div className="plus-indicator-overlay">
-                                                                                <span
-                                                                                    className="plus-indicator">+{post.gallery_images.length - 5}</span>
-                                                                    </div>
-                                                                </div>
                                                             </>
                                                         )}
                                                     </>
@@ -986,84 +899,67 @@ const UserProfile = () => {
 
 
                                         <div className="card-body d-flex p-0 mt-3">
-                                            <Link to="#"
-                                                  className="emoji-bttn d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss me-2"
-                                                  onClick={() => handleReactionClick(post.id)}>
-                                                <i className="feather-thumbs-up text-white bg-primary me-1 btn-round-xs font-xss"></i>
-                                                <i className="feather-heart text-white bg-red-gradiant me-2 btn-round-xs font-xss"></i>2.8K
-                                                Like</Link>
-                                            <div
-                                                className={`emoji-wrap ${isReactionActive === post.id ? 'active' : ''}`}>
-                                                <ul className="emojis list-inline mb-0">
-                                                    <li className="emoji list-inline-item">
-                                                        <i className="feather-heart text-white bg-red-gradiant me-2 btn-round-xs font-xss"></i>
-                                                    </li>
-                                                    <li className="emoji list-inline-item"><i
-                                                        className="em em-angry"></i></li>
-                                                    <li className="emoji list-inline-item">
-                                                        <i className="feather-thumbs-up text-white bg-primary me-1 btn-round-xs font-xss"></i>
-                                                    </li>
-                                                    <li className="emoji list-inline-item"><i
-                                                        className="em em-astonished"></i></li>
-                                                    <li className="emoji list-inline-item"><i
-                                                        className="em em-blush"></i></li>
-                                                    <li className="emoji list-inline-item"><i
-                                                        className="em em-clap"></i></li>
-                                                    <li className="emoji list-inline-item"><i
-                                                        className="em em-cry"></i></li>
-                                                    <li className="emoji list-inline-item"><i
-                                                        className="em em-full_moon_with_face"></i></li>
-                                                </ul>
-                                            </div>
+                                            <Link
+                                                to="#"
+                                                className="emoji-bttn d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss me-2"
+                                                onClick={() => handleReactionClick(post.id)} // Only updates this specific post
+                                            >
+                                                <i className={`feather-thumbs-up ${likedPosts.has(post.id) ? 'bg-primary text-grey' : ''} me-1 btn-round-xs font-xss`}></i>
+                                                Like {post.like_count || 0}
+                                            </Link>
+
+
                                             {/* Comment button */}
-                                            <Link to="#"
-                                                  className="d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss me-2"
-                                                  onClick={() => handleShowComments(post.id)}>
+                                            <Link
+                                                to="#"
+                                                className="d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss me-2"
+                                                onClick={() => handleShowComments(post.id)}
+                                            >
                                                 <i className="feather-message-circle text-dark text-grey-900 btn-round-sm font-lg"></i>
                                                 <span className="d-none-xss">{post.comments} Comment</span>
-
                                             </Link>
                                             <div
                                                 className="dropdown-menu dropdown-menu-end p-4 rounded-xxl border-0 shadow-lg"
-                                                aria-labelledby="dropdownMenu31">
+                                                aria-labelledby="dropdownMenu31"
+                                            >
                                                 <h4 className="fw-700 font-xss text-grey-900 d-flex align-items-center">
-                                                    Share <i
-                                                    className="feather-x ms-auto font-xssss btn-round-xs bg-greylight text-grey-900 me-2"></i>
+                                                    Share
+                                                    <i className="feather-x ms-auto font-xssss btn-round-xs bg-greylight text-grey-900 me-2"></i>
                                                 </h4>
                                                 <div className="card-body p-0 d-flex">
                                                     <ul className="d-flex align-items-center justify-content-between mt-2">
                                                         <li className="me-1">
-                                                            <Link
-                                                                to={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareData?.shareableLink || `${post.id}`)}`}
+                                                            <a
+                                                                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`http://localhost:3000/single-post/${post.id}`)}`}
                                                                 className="btn-round-lg bg-facebook"
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
                                                                 onClick={() => handleShare(post.id)}
                                                             >
                                                                 <i className="font-xs ti-facebook text-white"></i>
-                                                            </Link>
+                                                            </a>
                                                         </li>
                                                         <li className="me-1">
-                                                            <Link
-                                                                to={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareData?.shareableLink || `${post.id}`)}&text=Check out this post!`}
+                                                            <a
+                                                                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out this post: http://localhost:3000/single-post/${post.id}`)}`}
                                                                 className="btn-round-lg bg-twitter"
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
                                                                 onClick={() => handleShare(post.id)}
                                                             >
                                                                 <i className="font-xs ti-twitter-alt text-white"></i>
-                                                            </Link>
+                                                            </a>
                                                         </li>
                                                         <li className="me-1">
-                                                            <Link
-                                                                to={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareData?.shareableLink || `https://social.techxdeveloper.com/posts/${post.id}`)}`}
+                                                            <a
+                                                                href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(`http://localhost:3000/single-post/${post.id}`)}`}
                                                                 className="btn-round-lg bg-linkedin"
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
                                                                 onClick={() => handleShare(post.id)}
                                                             >
                                                                 <i className="font-xs ti-linkedin text-white"></i>
-                                                            </Link>
+                                                            </a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -1072,17 +968,17 @@ const UserProfile = () => {
                                                     Link</h4>
                                                 <i
                                                     className="feather-copy position-absolute right-35 mt-3 font-xs text-grey-500"
-                                                    onClick={(event) => handleCopyLink(event, shareData?.shareableLink || `https://social.techxdeveloper.com/${post.id}`)}
+                                                    onClick={(event) => handleCopyLink(event, `http://localhost:3000/single-post/${post.id}`)}
                                                 ></i>
 
                                                 <input
                                                     type="text"
-                                                    value={shareData?.shareableLink || `https://social.techxdeveloper.com/${post.id}`}
+                                                    value={`http://localhost:3000/single-post/${post.id}`}
                                                     className="bg-grey text-grey-500 font-xssss border-0 lh-32 p-2 font-xssss fw-600 rounded-3 w-100 theme-dark-bg"
                                                     readOnly
                                                 />
-                                                {copySuccess && <span
-                                                    className="text-success mt-2">Link copied!</span>} {/* Success message */}
+                                                {copySuccess &&
+                                                    <span className="text-success mt-2">Link copied!</span>}
                                             </div>
 
 
@@ -1100,31 +996,32 @@ const UserProfile = () => {
                                                     <p>Loading comments...</p>
                                                 ) : (
                                                     <>
-                                                        {comments.length > 0 ? (
-                                                            comments.map((userComment, id) => (
-                                                                <div key={id} className="d-flex align-items-start mb-3">
+                                                        {commentsByPost[post.id] && commentsByPost[post.id].length > 0 ? (
+                                                            commentsByPost[post.id].map((userComment, id) => (
+                                                                <div key={id}
+                                                                     className="d-flex align-items-start mb-3">
                                                                     <figure className="avatar me-3">
                                                                         <img
-                                                                            src={userComment.user_image || '/images/profile-2.png'}
+                                                                            src={userComment.user.image || '/images/profile-2.png'}
                                                                             alt="user"
                                                                             className="rounded-circle w30"
                                                                         />
                                                                     </figure>
                                                                     <div className="comment-content">
                                                                         <h5 className="fw-600 text-grey-900 font-xssss mb-1">
-                                                                            {userComment.username || "Unknown User"}
+                                                                            {userComment.user.username || "Unknown User"}
                                                                             <span className="d-none-xss">
-                                        {formatTimeAgo(userComment.createdAt)}
-                                    </span>
+                                                                          {formatTimeAgo(userComment.createdAt)}
+                                                                                 </span>
                                                                         </h5>
                                                                         <p className="fw-400 text-grey-500 lh-24 font-xss m-0 text-dark">
-                                                                            {typeof userComment.comment === 'string' ? userComment.comment : 'Invalid comment'}
+                                                                            {typeof userComment.content === 'string' ? userComment.content : 'Invalid comment'}
                                                                         </p>
                                                                     </div>
                                                                 </div>
                                                             ))
                                                         ) : (
-                                                            <p>No comments yet.</p>
+                                                            <p>No comments yet.</p> // This shows if there are no comments for this post
                                                         )}
                                                     </>
                                                 )}
@@ -1132,7 +1029,8 @@ const UserProfile = () => {
                                                 {/* Show loader while adding a comment */}
                                                 {loadingAddComment && <p>Adding a comment...</p>}
 
-                                                <form className="comment-form d-flex mt-2" onSubmit={(e) => handleAddComment(e, post.id)}>
+                                                <form className="comment-form d-flex mt-2"
+                                                      onSubmit={(e) => handleAddComment(e, post.id)}>
                                                     <input
                                                         type="text"
                                                         className="form-control h75 rounded-xxl p-3"
@@ -1140,12 +1038,16 @@ const UserProfile = () => {
                                                         value={newComment}
                                                         onChange={(e) => setNewComment(e.target.value)}
                                                     />
-                                                    <button type="submit" className={`btn ms-2 border-0 ${newComment ? 'btn-primary' : ''}`} disabled={!newComment}>
+                                                    <button type="submit"
+                                                            className={`btn ms-2 border-0 ${newComment ? 'btn-primary' : ''}`}
+                                                            disabled={!newComment}>
                                                         <i className="feather-send"></i>
                                                     </button>
                                                 </form>
                                             </div>
                                         )}
+
+
                                     </div>
                                 ))}
                             </>

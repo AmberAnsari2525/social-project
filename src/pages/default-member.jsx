@@ -77,7 +77,7 @@ const FriendsList = () => {
                                                         style={{top: '21px', left: '60px'}}
                                                     >
                                                         <img
-                                                            src={friend.receiver?.image || 'images/profile-3.png'}
+                                                            src={friend.friend?.image || 'images/profile-3.png'}
                                                             alt="user-avatar"
                                                             className="float-right p-1 bg-white rounded-circle w-100"
                                                         />
@@ -85,7 +85,7 @@ const FriendsList = () => {
                                                     <div style={{marginTop: '115px'}}>
                                                         {/* Display Username */}
                                                         <h4 className="fw-700 font-xsss mt-3 mb-1">
-                                                            {friend.receiver?.username || "No username available"}
+                                                            {friend.friend?.username || "No username available"}
                                                         </h4>
 
                                                         {/* Display Email */}
@@ -106,6 +106,7 @@ const FriendsList = () => {
                                                                 className="mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-danger font-xsssss fw-700 ls-lg text-white">
                                                                 FRIEND
                                                             </button>
+
                                                         )}
                                                     </div>
                                                 </div>

@@ -46,15 +46,22 @@ export const fetchUserData = async () => {
 
 
 //update profile
-export const updateProfile = async (userData) => {
+
+
+export const updateProfile = async (formData) => { // Accept FormData
     try {
-        const response = await axiosinstance.put('auth/update', userData);
-        return response.data; // return updated profile data
+        const response = await axiosinstance.put('auth/update', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data', // Important for file uploads
+            },
+        });
+        return response.data; // Return updated profile data
     } catch (error) {
         console.error('Error updating profile:', error.response ? error.response.data : error.message);
-        throw error; // rethrow error to handle it in the UI if needed
+        throw error; // Rethrow error to handle it in the UI if needed
     }
 };
+
 //update
 export const updateUserData = async (data) => {
     try {
@@ -161,6 +168,17 @@ export const userGetPost = async (id) => {
         throw error;
     }
 };
+
+//single post
+export const fetchSinglePost = async (post_id) => {
+    try {
+        const response = await axiosinstance.get(`/posts/${post_id}`);
+        return response.data; // Return the response data
+    } catch (error) {
+        console.error("Error fetching post:", error);
+    }
+};
+
 //get user by id
 export const fetchUserId = async (id) => {
     try {
@@ -196,15 +214,18 @@ export const confirmOrder = async (orderdata) => {
     }
 }
 
-/*share api*/
-export const sharePosts = async (post_id) => {
+
+// API call to share the post
+export const sharePosts = async (shareData) => {
     try {
-        const response = await axiosinstance.post(`/shares/${post_id}`);
-        return response.data;  // Ensure backend returns { shareableLink: "..."}
+        const response = await axiosinstance.post(`/shares`, shareData);
+        return response.data;  // Backend should return share details
     } catch (error) {
         throw error.response ? error.response.data : new Error(error.message);
     }
 };
+
+
 
 //get comment post by id
 export const getCommentsById = async (post_id) => {
@@ -382,6 +403,16 @@ export const getNotifications = async () => {
         return response.data;  // Adjust based on API response
     } catch (error) {
         console.error('Error fetching notifications:', error);
+        throw error;
+    }
+};
+
+export const changePassword = async (userData) => {
+    try {
+        const response = await axiosinstance.post("auth/change-password", userData);
+        return response.data; // Assuming API returns a message or token
+    } catch (error) {
+        console.error("Change password Error", error);
         throw error;
     }
 };

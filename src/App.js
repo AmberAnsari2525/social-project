@@ -42,6 +42,7 @@ import FriendsList from "./pages/default-member";
 import Users from "./pages/user"
 import UserViewProfile from './pages/view-profile'
 import {UpdatePost} from "./pages/UpdatePost";
+import {SinglePost} from "./pages/singlePost";
 
 function App() {
     return (
@@ -212,6 +213,12 @@ function App() {
                             <Route path="/user-page" element={
                                 <AuthContext.Consumer>
                                     {({requireAuth }) => requireAuth (UserProfile)}
+                                </AuthContext.Consumer>
+                            } />
+
+                            <Route path="/single-post/:post_id" element={
+                                <AuthContext.Consumer>
+                                    {({requireAuth }) => requireAuth (SinglePost)}
                                 </AuthContext.Consumer>
                             } />
                         </Route>
